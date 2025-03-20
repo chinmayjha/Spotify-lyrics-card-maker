@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Boldonse&family=Tektur:wght@400..900&display=swap');
+
+body {
+  background-color: #121212;
+  color: #fff;
+  font-family: "Tektur", sans-serif;
+font-optical-sizing: auto;
+font-weight: 400;
+font-style: normal;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: scroll; /* Add the ability to scroll */
+}
+body::-webkit-scrollbar {
+    display: none;
+}
+.preview {
+  padding: 20px;
+  background: #282828;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 650px;
+  margin: auto;
+  position: relative; /* Make preview container relative */
+}
+.artist-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.artist-container img {
+  width: 65px;
+  height: 65px;
+  border-radius: 15%;
+}
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  background: #333;
+  color: #fff;
+  transition: border-bottom 0.3s ease;
+}
+input:focus, textarea:focus {
+  border-bottom: 2px solid salmon;
+  outline: none;
+}
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  background: salmon;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+.slider {
+  width: 100%;
+  accent-color: salmon;
+}
+.color-picker input {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+footer {
+  text-align: center;
+  padding: 20px;
+  margin-top: 20px;
+  color: #fff;
+}
+footer a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+}
+footer a:hover {
+  color: salmon;
+}
+.watermark {
+  position: absolute;  /* Position absolutely within preview */
+  bottom: 10px;
+  right: 10px;
+  font-size: 12px;
+  color: #999;
+  text-decoration: none;
+}
+
+.watermark a{
+  color: #999;
+  text-decoration: none;
+}
+#preview-lyrics {
+  font-size: 1.5em;
+  font-family: "Boldonse", system-ui;
+  white-space: pre-wrap; /* Preserve line breaks and spaces */
+}

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spotify Lyrics Card Maker</title>
+  <meta name="description" content="Create custom Spotify lyrics cards for sharing on social media." />
+  <meta name="keywords" content="Spotify, lyrics, card, maker, generator, social media" />
+  <meta name="author" content="Chinmay" />
+  <meta property="og:title" content="Spotify Lyrics Card Maker" />
+  <meta property="og:description" content="Create custom Spotify lyrics cards for sharing on social media." />
+  <meta property="og:image" content="https://yt3.googleusercontent.com/UMGZZMPQkM3kGtyW4jNE1GtpSrydfNJdbG1UyWTp5zeqUYc6-rton70Imm7B11RulRRuK521NQ=s900-c-k-c0x00ffffff-no-rj" />
+  <meta property="og:url" content="https://chinmayjha.tech/spotify-lyrics-card-maker" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:creator" content="@yItschinmayjha" />
+  <meta name="twitter:title" content="Spotify Lyrics Card Maker" />
+  <meta name="twitter:description" content="Create custom Spotify lyrics cards for sharing on social media." />
+  <meta name="twitter:image" content="https://yt3.googleusercontent.com/UMGZZMPQkM3kGtyW4jNE1GtpSrydfNJdbG1UyWTp5zeqUYc6-rton70Imm7B11RulRRuK521NQ=s900-c-k-c0x00ffffff-no-rj" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  />
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container text-center">
+    <h1>Spotify Lyrics Card Maker</h1>
+    <div class="row">
+      <div class="col-lg-6">
+        <label for="image-width">Card Width (px): <span id="image-width-value">400</span></label>
+        <input type="range" class="slider" id="image-width" min="300" max="650" value="400" oninput="updatePreview()"/>
+
+        <label for="border-radius">Border Radius (px): <span id="radius-value">15</span></label>
+        <input type="range" class="slider" id="border-radius" min="0" max="50" value="15" oninput="updatePreview()"/>
+
+        <div class="color-picker">
+          <label for="text-color">Text Color:</label>
+          <input type="color" id="text-color" value="#ffffff" oninput="updatePreview()"/>
+          <label for="bg-color">BG Color:</label>
+          <input type="color" id="bg-color" value="#282828" oninput="updatePreview()"/>
+        </div>
+
+        <input type="text" id="song" placeholder="Enter Song Name" oninput="updatePreview()"/>
+        <input type="text" id="artist" placeholder="Enter Artist Name" oninput="updatePreview()"/>
+        <input type="text" id="cover-url" placeholder="Enter Cover Art URL" oninput="updatePreview()"/>
+        <textarea
+          id="lyrics"
+          placeholder="Enter Lyrics"
+          oninput="updatePreview()"
+        ></textarea>
+        <button onclick="generateImage()">Download</button>
+      </div>
+      <div class="col-lg-6">
+        <div class="preview" id="preview">
+          <div class="artist-container">
+            <img id="artist-image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd2NAjCcjjk7ac57mKCQvgWVTmP0ysxnzQnQ&s" draggable="false" alt="Artist Image" crossorigin="anonymous"/>
+            <div>
+              <h2 id="preview-song">Song Name</h2>
+              <h4 id="preview-artist">Artist Name</h4>
+            </div>
+          </div>
+          <p id="preview-lyrics">Lyrics will appear here...</p>
+          <div class="watermark">Made by chinmayjha.tech</div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    Made with ❤️ by <a href="https://chinmayjha.tech" target="_blank">Chinmay</a>
+  </footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    // Update the preview card with user inputs
+    function updatePreview() {
+      document.getElementById('preview-song').textContent =
+        document.getElementById('song').value || 'Song Name';
+      document.getElementById('preview-artist').textContent =
+        document.getElementById('artist').value || 'Artist Name';
+      document.getElementById('preview-lyrics').textContent =
+        document.getElementById('lyrics').value || 'Lyrics will appear here...';
+
+      let img = document.getElementById('artist-image');
+      let coverUrl = document.getElementById('cover-url').value;
+      img.src =
+        coverUrl || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd2NAjCcjjk7ac57mKCQvgWVTmP0ysxnzQnQ&s';
+      // Ensure crossOrigin is set
+      img.setAttribute('crossorigin', 'anonymous');
+
+      let cardWidth = document.getElementById('image-width').value;
+      let borderRadius = document.getElementById('border-radius').value;
+      document.getElementById('preview').style.width = cardWidth + 'px';
+      document.getElementById('preview').style.borderRadius = borderRadius + 'px';
+      document.getElementById('image-width-value').textContent = cardWidth;
+      document.getElementById('radius-value').textContent = borderRadius;
+
+      let textColor = document.getElementById('text-color').value;
+      let bgColor = document.getElementById('bg-color').value;
+      document.getElementById('preview').style.color = textColor;
+      document.getElementById('preview').style.backgroundColor = bgColor;
+    }
+
+    // Generate and download the image from the preview card
+    function generateImage() {
+      const previewElement = document.getElementById('preview');
+      const borderRadius = document.getElementById('border-radius').value;
+
+      html2canvas(previewElement, {
+        useCORS: true,
+        allowTaint: true,
+        // Add a backgroundColor to handle transparency issues
+        backgroundColor: document.getElementById('bg-color').value,
+      }).then(canvas => {
+        // Create a new canvas to apply rounded corners
+        const roundedCanvas = document.createElement('canvas');
+        const ctx = roundedCanvas.getContext('2d');
+        roundedCanvas.width = canvas.width;
+        roundedCanvas.height = canvas.height;
+
+        // Draw rounded rectangle
+        ctx.beginPath();
+        ctx.roundRect(0, 0, canvas.width, canvas.height, parseInt(borderRadius));
+        ctx.closePath();
+        ctx.clip();
+
+        // Draw the image onto the rounded rectangle
+        ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+
+        let link = document.createElement('a');
+        link.download = 'spotify-lyrics-card.png';
+        link.href = roundedCanvas.toDataURL();
+        link.click();
+      });
+    }
+  </script>
+</body>
+</html>
