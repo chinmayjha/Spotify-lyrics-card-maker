@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://chinmayjha.tech/spotify-lyrics-card-maker/sitemap.xml
+
+# Disallow crawling of any admin or private directories (if any)
+# Disallow: /admin/
+# Disallow: /private/
+
+# Allow crawling of CSS and JS files for better indexing
+Allow: *.css
+Allow: *.js
+
+# Crawl-delay (optional, in seconds)
+Crawl-delay: 1
