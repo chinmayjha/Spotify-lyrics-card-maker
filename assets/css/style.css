@@ -266,8 +266,8 @@
   text-decoration: none;
 }
 .navbar-logo-img {
-  width: 36px;
-  height: 36px;
+  width: 46px;
+  height: 46px;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   background: var(--glass-bg);
