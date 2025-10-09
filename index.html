@@ -1,388 +1,690 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="theme-color" content="#1db954"/>
-  
-  <!-- Preload Critical Resources -->
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"></noscript>
-  
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  
-  <!-- Favicon and PWA Icons -->
-  <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico">
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="manifest" href="manifest.json">
-  
-  <!-- SEO Meta Tags -->
-  <title>LyricsCard - Create Beautiful Social Media Cards</title>
-  <meta name="description" content="Create stunning Spotify-style lyrics cards for free! Perfect for Instagram stories, Twitter posts, and social media sharing. No signup required, instant download." />
-  <meta name="keywords" content="Spotify lyrics card, music card generator, social media music post, lyrics image maker, Instagram story music, Twitter music card, free music graphics" />
-  <meta name="author" content="Chinmay Jha" />
-  <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://chinmayjha.tech/LyricsCard" />
-  
-  <!-- Open Graph Meta Tags -->
-  <meta property="og:site_name" content="LyricsCard" />
-  <meta property="og:title" content="LyricsCard - Create Beautiful Social Media Cards" />
-  <meta property="og:description" content="Create stunning LyricsCard images for free! Perfect for Instagram stories, Twitter posts, and social media sharing. No signup required, instant download." />
-  <meta property="og:image" content="https://yt3.googleusercontent.com/UMGZZMPQkM3kGtyW4jNE1GtpSrydfNJdbG1UyWTp5zeqUYc6-rton70Imm7B11RulRRuK521NQ=s900-c-k-c0x00ffffff-no-rj" />
-  <meta property="og:image:alt" content="LyricsCard Preview" />
-  <meta property="og:url" content="https://chinmayjha.tech/LyricsCard" />
-  <meta property="og:type" content="website" />
-  <meta property="og:locale" content="en_US" />
-  
-  <!-- Twitter Card Meta Tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:creator" content="@Itschinmayjha" />
-  <meta name="twitter:site" content="@Itschinmayjha" />
-  <meta name="twitter:title" content="LyricsCard - Create Beautiful Social Media Cards" />
-  <meta name="twitter:description" content="Create stunning LyricsCard images for free! Perfect for social media sharing." />
-  <meta name="twitter:image" content="https://yt3.googleusercontent.com/UMGZZMPQkM3kGtyW4jNE1GtpSrydfNJdbG1UyWTp5zeqUYc6-rton70Imm7B11RulRRuK521NQ=s900-c-k-c0x00ffffff-no-rj" />
-  
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-  "name": "LyricsCard",
-  "description": "Create stunning LyricsCard images for free! Perfect for Instagram stories, Twitter posts, and social media sharing.",
-  "url": "https://chinmayjha.tech/LyricsCard",
-    "applicationCategory": "DesignApplication",
-    "operatingSystem": "Web Browser",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "author": {
-      "@type": "Person",
-      "name": "Chinmay Jha",
-      "url": "https://chinmayjha.tech"
-    }
-  }
-  </script>
-  
-  <!-- Critical CSS (inline for performance) -->
-  <style>
-    :root{--primary:#1db954;--secondary:#1ed760;--bg-dark:#0d1117;--bg-darker:#010409;--glass-bg:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.1);--text-primary:#f0f6fc;--text-secondary:#8b949e;--shadow:0 16px 32px rgba(0,0,0,0.3)}
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:radial-gradient(ellipse at top,#0d1117 0%,#010409 100%);color:var(--text-primary);overflow-x:hidden;min-height:100vh}
-    .loading-screen{position:fixed;inset:0;background:var(--bg-dark);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.5s ease}
-    .loading-spinner{width:40px;height:40px;border:3px solid var(--glass-border);border-top:3px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-  </style>
-  
-    <link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body>
-  <!-- Loading Screen -->
-  <div class="loading-screen" id="loadingScreen">
-    <div class="loading-spinner"></div>
-  </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1db954" />
 
-  <!-- Navigation -->
-  <nav class="navbar navbar-modern glass-nav">
-    <div class="navbar-container">
-      <a class="navbar-logo" href="#" aria-label="LyricsCard Home">
-        <img src="assets/icons/apple-touch-icon.png" alt="LyricsCard Logo" class="navbar-logo-img" />
-        <span class="navbar-logo-text">LyricsCard</span>
-      </a>
-      <ul class="navbar-links">
-        <li><button class="btn nav-btn" id="themeToggle" title="Toggle Theme" aria-label="Toggle Theme"><i data-lucide="moon" class="theme-icon"></i></button></li>
-        <li><button class="btn nav-btn" id="helpBtn" title="Help & Shortcuts" aria-label="Help & Shortcuts"><i data-lucide="info"></i></button></li>
-        <li><button class="btn nav-btn" id="developerInfoBtn" title="Developer Info" aria-label="Developer Info"><i data-lucide="user"></i></button></li>
-      </ul>
-      <button class="navbar-toggle" aria-label="Open Menu"><span></span><span></span><span></span></button>
-    </div>
-  </nav>
+    <!-- Preload Critical Resources -->
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript
+      ><link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+    /></noscript>
 
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <div class="hero-background">
-      <div class="hero-gradient"></div>
-      <div class="hero-pattern"></div>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <!-- Favicon and PWA Icons -->
+    <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico" />
+    <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- SEO Meta Tags -->
+    <title>LyricsCard - Create Beautiful Social Media Cards</title>
+    <meta
+      name="description"
+      content="Create stunning Spotify-style lyrics cards for free! Perfect for Instagram stories, Twitter posts, and social media sharing. No signup required, instant download."
+    />
+    <meta
+      name="keywords"
+      content="Spotify lyrics card, music card generator, social media music post, lyrics image maker, Instagram story music, Twitter music card, free music graphics"
+    />
+    <meta name="author" content="Chinmay Jha" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://chinmayjha.tech/LyricsCard" />
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:site_name" content="LyricsCard" />
+    <meta
+      property="og:title"
+      content="LyricsCard - Create Beautiful Social Media Cards"
+    />
+    <meta
+      property="og:description"
+      content="Create stunning LyricsCard images for free! Perfect for Instagram stories, Twitter posts, and social media sharing. No signup required, instant download."
+    />
+    <meta
+      property="og:image"
+      content="https://yt3.googleusercontent.com/UMGZZMPQkM3kGtyW4jNE1GtpSrydfNJdbG1UyWTp5zeqUYc6-rton70Imm7B11RulRRuK521NQ=s900-c-k-c0x00ffffff-no-rj"
+    />
+    <meta property="og:image:alt" content="LyricsCard Preview" />
+    <meta property="og:url" content="https://chinmayjha.tech/LyricsCard" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@Itschinmayjha" />
+    <meta name="twitter:site" content="@Itschinmayjha" />
+    <meta
+      name="twitter:title"
+      content="LyricsCard - Create Beautiful Social Media Cards"
+    />
+    <meta
+      name="twitter:description"
+      content="Create stunning LyricsCard images for free! Perfect for social media sharing."
+    />
+    <meta
+      name="twitter:image"
+      content="https://yt3.googleusercontent.com/UMGZZMPQkM3kGtyW4jNE1GtpSrydfNJdbG1UyWTp5zeqUYc6-rton70Imm7B11RulRRuK521NQ=s900-c-k-c0x00ffffff-no-rj"
+    />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "LyricsCard",
+        "description": "Create stunning LyricsCard images for free! Perfect for Instagram stories, Twitter posts, and social media sharing.",
+        "url": "https://chinmayjha.tech/LyricsCard",
+        "applicationCategory": "DesignApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Chinmay Jha",
+          "url": "https://chinmayjha.tech"
+        }
+      }
+    </script>
+
+    <!-- Critical CSS (inline for performance) -->
+    <style>
+      :root {
+        --primary: #1db954;
+        --secondary: #1ed760;
+        --bg-dark: #0d1117;
+        --bg-darker: #010409;
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --text-primary: #f0f6fc;
+        --text-secondary: #8b949e;
+        --shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", system-ui, -apple-system, sans-serif;
+        background: radial-gradient(ellipse at top, #0d1117 0%, #010409 100%);
+        color: var(--text-primary);
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+      .loading-screen {
+        position: fixed;
+        inset: 0;
+        background: var(--bg-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease;
+      }
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid var(--glass-border);
+        border-top: 3px solid var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      /* Minimal Tailwind-inspired modal and kbd for Help Modal */
+      .fixed {
+        position: fixed;
+      }
+      .inset-0 {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+      .z-50 {
+        z-index: 50;
+      }
+      .flex {
+        display: flex;
+      }
+      .items-center {
+        align-items: center;
+      }
+      .justify-center {
+        justify-content: center;
+      }
+      .bg-black {
+        background-color: #000;
+      }
+      .bg-opacity-60 {
+        background-color: rgba(0, 0, 0, 0.6);
+      }
+      .hidden {
+        display: none;
+      }
+      .bg-white {
+        background-color: #fff;
+      }
+      .rounded-xl {
+        border-radius: 0.75rem;
+      }
+      .shadow-2xl {
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      }
+      .max-w-lg {
+        max-width: 32rem;
+      }
+      .w-full {
+        width: 100%;
+      }
+      .p-6 {
+        padding: 1.5rem;
+      }
+      .relative {
+        position: relative;
+      }
+      .absolute {
+        position: absolute;
+      }
+      .top-4 {
+        top: 1rem;
+      }
+      .right-4 {
+        right: 1rem;
+      }
+      .text-gray-400 {
+        color: #9ca3af;
+      }
+      .hover\:text-gray-700:hover {
+        color: #374151;
+      }
+      .transition {
+        transition: color 0.2s;
+      }
+      .mb-4 {
+        margin-bottom: 1rem;
+      }
+      .gap-2 {
+        gap: 0.5rem;
+      }
+      .text-green-500 {
+        color: #22c55e;
+      }
+      .text-xl {
+        font-size: 1.25rem;
+      }
+      .font-bold {
+        font-weight: 700;
+      }
+      .text-gray-800 {
+        color: #1f2937;
+      }
+      .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+        margin-top: 1rem;
+      }
+      .font-semibold {
+        font-weight: 600;
+      }
+      .text-gray-700 {
+        color: #374151;
+      }
+      .mb-1 {
+        margin-bottom: 0.25rem;
+      }
+      .text-gray-600 {
+        color: #4b5563;
+      }
+      .text-sm {
+        font-size: 0.875rem;
+      }
+      .grid {
+        display: grid;
+      }
+      .grid-cols-1 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+      .gap-2 {
+        gap: 0.5rem;
+      }
+      .flex {
+        display: flex;
+      }
+      .kbd {
+        display: inline-block;
+        padding: 0.2em 0.5em;
+        font-size: 0.9em;
+        font-family: monospace;
+        background: #f3f4f6;
+        border-radius: 0.375rem;
+        border: 1px solid #d1d5db;
+        color: #374151;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+      }
+      .list-disc {
+        list-style-type: disc;
+      }
+      .pl-5 {
+        padding-left: 1.25rem;
+      }
+      .space-y-1 > :not([hidden]) ~ :not([hidden]) {
+        margin-top: 0.25rem;
+      }
+    </style>
+
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+      <div class="loading-spinner"></div>
     </div>
-    <div class="container">
-      <div class="hero-content">
-        <div class="hero-badge">
-          <span>✨ FREE TOOL</span>
-        </div>
-        <h1 class="hero-title">
-          Create <span class="text-gradient">Stunning</span><br>
-          LyricsCard
-        </h1>
-        <p class="hero-description">
-          Transform your favorite lyrics into beautiful, shareable cards.
-          Perfect for Instagram stories, Twitter posts, and social media.
-        </p>
-        <div class="hero-stats">
-          <div class="stat-item">
-            <div class="stat-number">50K+</div>
-            <div class="stat-label">Cards Created</div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-modern glass-nav">
+      <div class="navbar-container">
+        <a class="navbar-logo" href="#" aria-label="LyricsCard Home">
+          <img
+            src="assets/icons/logo.png"
+            alt="LyricsCard Logo"
+            class="navbar-logo-img"
+          />
+          <span class="navbar-logo-text">LyricsCard</span>
+        </a>
+        <ul class="navbar-links">
+          <li>
+            <button
+              class="btn nav-btn"
+              id="helpBtn"
+              title="Help & Shortcuts"
+              aria-label="Help & Shortcuts"
+            >
+              <i data-lucide="info"></i>
+            </button>
+          </li>
+          <li>
+            <button
+              class="btn nav-btn"
+              id="developerInfoBtn"
+              title="Developer Info"
+              aria-label="Developer Info"
+            >
+              <i data-lucide="user"></i>
+            </button>
+          </li>
+        </ul>
+        <button class="navbar-toggle" aria-label="Open Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-background">
+        <div class="hero-gradient"></div>
+        <div class="hero-pattern"></div>
+      </div>
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span>✨ FREE TOOL</span>
           </div>
-          <div class="stat-item">
-            <div class="stat-number">100%</div>
-            <div class="stat-label">Free Forever</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">0</div>
-            <div class="stat-label">Sign-up Required</div>
-          </div>
-        </div>
-        <div class="hero-cta">
-          <button class="btn btn-primary btn-cta" onclick="document.getElementById('mainApp').scrollIntoView({behavior: 'smooth'})">
-            <span>Start Creating</span>
-            <i>→</i>
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section class="features-section">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Why Choose Our Tool?</h2>
-        <p class="section-description">Everything you need to create professional-looking music cards</p>
-      </div>
-      
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <h3 class="feature-title">Lightning Fast</h3>
-          <p class="feature-description">Generate cards instantly with real-time preview</p>
-        </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon"><i data-lucide="palette"></i></div>
-          <h3 class="feature-title">Beautiful Themes</h3>
-          <p class="feature-description">Multiple color schemes and customization options</p>
-        </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon"><i data-lucide="smartphone"></i></div>
-          <h3 class="feature-title">Mobile Ready</h3>
-          <p class="feature-description">Works perfectly on all devices and screen sizes</p>
-        </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon"><i data-lucide="download"></i></div>
-          <h3 class="feature-title">Multiple Formats</h3>
-          <p class="feature-description">Download as PNG or copy to clipboard instantly</p>
-        </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon"><i data-lucide="lock"></i></div>
-          <h3 class="feature-title">Privacy First</h3>
-          <p class="feature-description">Everything runs locally - your data stays private</p>
-        </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon">🆓</div>
-          <h3 class="feature-title">Completely Free</h3>
-          <p class="feature-description">No watermarks, no limits, no hidden costs</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Main Application -->
-  <section class="main-app" id="mainApp">
-    <div class="container">
-      <div class="app-header">
-        <h2 class="app-title">Create Your Card</h2>
-        <p class="app-description">Fill in the details below and watch your card come to life</p>
-      </div>
-      
-      <div class="app-content">
-        <div class="row g-4">
-          <!-- Controls Panel -->
-          <div class="col-lg-5">
-            <div class="controls-panel glass-card">
-              <div class="panel-header">
-                <h3 class="panel-title">
-                  <i data-lucide="settings" class="panel-icon"></i>
-                  Customize Your Card
-                </h3>
-              </div>
-              
-              <!-- Theme Presets -->
-              <div class="form-section">
-                <label class="form-label">
-                  <i data-lucide="palette"></i> Quick Themes
-                </label>
-                <div class="theme-presets">
-                  <button class="theme-btn active" data-theme="classic" title="Classic Spotify Green">
-                    <div class="theme-preview" style="background: linear-gradient(135deg, #1db954, #1ed760);"></div>
-                    <span>Classic</span>
-                  </button>
-                  <button class="theme-btn" data-theme="midnight" title="Midnight Blue">
-                    <div class="theme-preview" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);"></div>
-                    <span>Midnight</span>
-                  </button>
-                  <button class="theme-btn" data-theme="sunset" title="Sunset Orange">
-                    <div class="theme-preview" style="background: linear-gradient(135deg, #f97316, #ea580c);"></div>
-                    <span>Sunset</span>
-                  </button>
-                  <button class="theme-btn" data-theme="purple" title="Royal Purple">
-                    <div class="theme-preview" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);"></div>
-                    <span>Purple</span>
-                  </button>
-                  <button class="theme-btn" data-theme="pink" title="Hot Pink">
-                    <div class="theme-preview" style="background: linear-gradient(135deg, #ec4899, #db2777);"></div>
-                    <span>Pink</span>
-                  </button>
-                </div>
-              </div>
-              
-              <!-- Card Dimensions -->
-              <div class="form-section">
-                <label class="form-label">
-                  <i data-lucide="maximize"></i> Card Dimensions
-                </label>
-                <div class="dimension-controls">
-                  <div class="dimension-item">
-                    <label for="image-width" class="dimension-label">
-                      Width: <span id="image-width-value" class="dimension-value">400</span>px
-                    </label>
-                    <input type="range" class="modern-slider" id="image-width" min="300" max="650" value="400" 
-                           oninput="debouncedUpdatePreview()"/>
-                  </div>
-                  <div class="dimension-item">
-                    <label for="border-radius" class="dimension-label">
-                      Corner Radius: <span id="radius-value" class="dimension-value">15</span>px
-                    </label>
-                    <input type="range" class="modern-slider" id="border-radius" min="0" max="50" value="15" 
-                           oninput="debouncedUpdatePreview()"/>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Color Customization -->
-              <div class="form-section">
-                <label class="form-label">
-                  <i data-lucide="droplet"></i> Colors
-                </label>
-                <div class="color-controls">
-                  <div class="color-input-group">
-                    <label for="text-color" class="color-label">Text</label>
-                    <input type="color" class="modern-color-picker" id="text-color" value="#ffffff" 
-                           oninput="debouncedUpdatePreview()"/>
-                  </div>
-                  <div class="color-input-group">
-                    <label for="bg-color" class="color-label">Background</label>
-                    <input type="color" class="modern-color-picker" id="bg-color" value="#282828" 
-                           oninput="debouncedUpdatePreview()"/>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Song Information -->
-              <div class="form-section">
-                <label class="form-label">
-                  <i data-lucide="music"></i> Song Information
-                </label>
-                <div class="input-stack">
-                  <div class="modern-input-group">
-                    <input type="text" class="modern-input" id="song" placeholder="Song Name" 
-                           oninput="debouncedUpdatePreview()"/>
-                    <span class="input-icon"><i data-lucide="music"></i></span>
-                  </div>
-                  <div class="modern-input-group">
-                    <input type="text" class="modern-input" id="artist" placeholder="Artist Name" 
-                           oninput="debouncedUpdatePreview()"/>
-                    <span class="input-icon"><i data-lucide="mic"></i></span>
-                  </div>
-                  <div class="modern-input-group">
-                    <input type="url" class="modern-input" id="cover-url" placeholder="Album Cover URL" 
-                           oninput="debouncedUpdatePreview()"/>
-                    <span class="input-icon"><i data-lucide="image"></i></span>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Lyrics Input -->
-              <div class="form-section">
-                <label class="form-label">
-                  <i data-lucide="type"></i> Lyrics
-                </label>
-                <div class="modern-textarea-group">
-                  <textarea class="modern-textarea" id="lyrics" rows="4" 
-                            placeholder="Paste your favorite lyrics here..."
-                            oninput="debouncedUpdatePreview()"></textarea>
-                  <div class="textarea-border"></div>
-                </div>
-              </div>
-              
-              <!-- Export Actions -->
-              <div class="form-section">
-                <label class="form-label">
-                  <i data-lucide="download"></i> Export Your Card
-                </label>
-                <div class="export-actions">
-                  <button type="button" class="btn-export btn-primary" onclick="generateImage()">
-                    <i data-lucide="download" class="export-icon"></i>
-                    <span>Download PNG</span>
-                  </button>
-                  <div class="export-secondary">
-                    <button type="button" class="btn-export btn-secondary" onclick="copyToClipboard()">
-                      <i data-lucide="copy"></i>
-                      <span>Copy</span>
-                    </button>
-                    <button type="button" class="btn-export btn-secondary" onclick="shareCard()">
-                      <i data-lucide="share-2"></i>
-                      <span>Share</span>
-                    </button>
-                  </div>
-                </div>
-                <div class="keyboard-shortcuts">
-                  <small class="shortcuts-text">
-                    <kbd>Ctrl</kbd>+<kbd>D</kbd> Download • 
-                    <kbd>Ctrl</kbd>+<kbd>C</kbd> Copy • 
-                    <kbd>Ctrl</kbd>+<kbd>S</kbd> Share
-                  </small>
-                </div>
-              </div>
+          <h1 class="hero-title">
+            Create <span class="text-gradient">Stunning</span><br />
+            LyricsCard
+          </h1>
+          <p class="hero-description">
+            Transform your favorite lyrics into beautiful, shareable cards.
+            Perfect for Instagram stories, Twitter posts, and social media.
+          </p>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <div class="stat-number">50K+</div>
+              <div class="stat-label">Cards Created</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">100%</div>
+              <div class="stat-label">Free Forever</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">0</div>
+              <div class="stat-label">Sign-up Required</div>
             </div>
           </div>
-          
-          <!-- Preview Panel -->
-          <div class="col-lg-7">
-            <div class="preview-panel glass-card">
-              <div class="panel-header">
-                <h3 class="panel-title">
-                  <i data-lucide="eye" class="panel-icon"></i>
-                  Live Preview
-                </h3>
-                <div class="preview-actions">
-                  <button class="preview-btn" id="fullscreenBtn" title="Fullscreen Preview">
-                    <i data-lucide="maximize-2"></i>
-                  </button>
+          <div class="hero-cta">
+            <button
+              class="btn btn-primary btn-cta"
+              onclick="document.getElementById('mainApp').scrollIntoView({behavior: 'smooth'})"
+            >
+              <span>Start Creating</span>
+              <i>→</i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Why Choose Our Tool?</h2>
+          <p class="section-description">
+            Everything you need to create professional-looking music cards
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3 class="feature-title">Lightning Fast</h3>
+            <p class="feature-description">
+              Generate cards instantly with real-time preview
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i data-lucide="palette"></i></div>
+            <h3 class="feature-title">Beautiful Themes</h3>
+            <p class="feature-description">
+              Multiple color schemes and customization options
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i data-lucide="smartphone"></i></div>
+            <h3 class="feature-title">Mobile Ready</h3>
+            <p class="feature-description">
+              Works perfectly on all devices and screen sizes
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i data-lucide="download"></i></div>
+            <h3 class="feature-title">Multiple Formats</h3>
+            <p class="feature-description">
+              Download as PNG or copy to clipboard instantly
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i data-lucide="lock"></i></div>
+            <h3 class="feature-title">Privacy First</h3>
+            <p class="feature-description">
+              Everything runs locally - your data stays private
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🆓</div>
+            <h3 class="feature-title">Completely Free</h3>
+            <p class="feature-description">
+              No watermarks, no limits, no hidden costs
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Application -->
+    <section class="main-app" id="mainApp">
+      <div class="container">
+        <div class="app-header">
+          <h2 class="app-title">Create Your Card</h2>
+          <p class="app-description">
+            Fill in the details below and watch your card come to life
+          </p>
+        </div>
+
+        <div class="app-content">
+          <div class="row g-4">
+            <!-- Controls Panel -->
+            <div class="col-lg-5">
+              <div class="controls-panel glass-card">
+                <div class="panel-header">
+                  <h3 class="panel-title">
+                    <i data-lucide="settings" class="panel-icon"></i>
+                    Customize Your Card
+                  </h3>
                 </div>
-              </div>
-              
-              <div class="preview-container">
-                <div class="preview-wrapper">
-                  <div class="preview" id="preview">
-                    <div class="artist-container">
-                      <img id="artist-image" 
-                           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd2NAjCcjjk7ac57mKCQvgWVTmP0ysxnzQnQ&s" 
-                           draggable="false" 
-                           alt="Album cover art" 
-                           crossorigin="anonymous"
-                           loading="lazy"/>
-                      <div class="song-info">
-                        <h3 id="preview-song">Song Name</h3>
-                        <h4 id="preview-artist">Artist Name</h4>
-                      </div>
+
+                <!-- Theme Presets -->
+                <!-- Theme Presets removed for cleaner UI -->
+
+                <!-- Card Dimensions -->
+                <div class="form-section">
+                  <label class="form-label">
+                    <i data-lucide="maximize"></i> Card Dimensions
+                  </label>
+                  <div class="dimension-controls">
+                    <div class="dimension-item">
+                      <label for="image-width" class="dimension-label">
+                        Width:
+                        <span id="image-width-value" class="dimension-value"
+                          >400</span
+                        >px
+                      </label>
+                      <input
+                        type="range"
+                        class="modern-slider"
+                        id="image-width"
+                        min="300"
+                        max="650"
+                        value="400"
+                        oninput="debouncedUpdatePreview()"
+                      />
                     </div>
-                    <p id="preview-lyrics">Lyrics will appear here...</p>
-                    <div class="watermark">Made by chinmayjha.tech</div>
+                    <div class="dimension-item">
+                      <label for="border-radius" class="dimension-label">
+                        Corner Radius:
+                        <span id="radius-value" class="dimension-value">15</span
+                        >px
+                      </label>
+                      <input
+                        type="range"
+                        class="modern-slider"
+                        id="border-radius"
+                        min="0"
+                        max="50"
+                        value="15"
+                        oninput="debouncedUpdatePreview()"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Color Customization -->
+                <div class="form-section">
+                  <label class="form-label">
+                    <i data-lucide="droplet"></i> Colors
+                  </label>
+                  <div class="color-controls">
+                    <div class="color-input-group">
+                      <label for="text-color" class="color-label">Text</label>
+                      <input
+                        type="color"
+                        class="modern-color-picker"
+                        id="text-color"
+                        value="#ffffff"
+                        oninput="debouncedUpdatePreview()"
+                      />
+                    </div>
+                    <div class="color-input-group">
+                      <label for="bg-color" class="color-label"
+                        >Background</label
+                      >
+                      <input
+                        type="color"
+                        class="modern-color-picker"
+                        id="bg-color"
+                        value="#282828"
+                        oninput="debouncedUpdatePreview()"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Song Information -->
+                <div class="form-section">
+                  <label class="form-label">
+                    <i data-lucide="music"></i> Song Information
+                  </label>
+                  <div class="input-stack">
+                    <div class="modern-input-group">
+                      <input
+                        type="text"
+                        class="modern-input"
+                        id="song"
+                        placeholder="Song Name"
+                        oninput="debouncedUpdatePreview()"
+                      />
+                      <span class="input-icon"
+                        ><i data-lucide="music"></i
+                      ></span>
+                    </div>
+                    <div class="modern-input-group">
+                      <input
+                        type="text"
+                        class="modern-input"
+                        id="artist"
+                        placeholder="Artist Name"
+                        oninput="debouncedUpdatePreview()"
+                      />
+                      <span class="input-icon"><i data-lucide="mic"></i></span>
+                    </div>
+                    <div class="modern-input-group">
+                      <input
+                        type="url"
+                        class="modern-input"
+                        id="cover-url"
+                        placeholder="Album Cover URL"
+                        oninput="debouncedUpdatePreview()"
+                      />
+                      <span class="input-icon"
+                        ><i data-lucide="image"></i
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Lyrics Input -->
+                <div class="form-section">
+                  <label class="form-label">
+                    <i data-lucide="type"></i> Lyrics
+                  </label>
+                  <div class="modern-textarea-group">
+                    <textarea
+                      class="modern-textarea"
+                      id="lyrics"
+                      rows="4"
+                      placeholder="Paste your favorite lyrics here..."
+                      oninput="debouncedUpdatePreview()"
+                    ></textarea>
+                    <div class="textarea-border"></div>
+                  </div>
+                </div>
+
+                <!-- Export Actions -->
+                <div class="form-section">
+                  <label class="form-label">
+                    <i data-lucide="download"></i> Export Your Card
+                  </label>
+                  <div class="export-actions">
+                    <button
+                      type="button"
+                      class="btn-export btn-primary"
+                      onclick="generateImage()"
+                    >
+                      <i data-lucide="download" class="export-icon"></i>
+                      <span>Download PNG</span>
+                    </button>
+                    <div class="export-secondary">
+                      <button
+                        type="button"
+                        class="btn-export btn-secondary"
+                        onclick="copyToClipboard()"
+                      >
+                        <i data-lucide="copy"></i>
+                        <span>Copy</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="btn-export btn-secondary"
+                        onclick="shareCard()"
+                      >
+                        <i data-lucide="share-2"></i>
+                        <span>Share</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="keyboard-shortcuts">
+                    <small class="shortcuts-text">
+                      <kbd>Ctrl</kbd>+<kbd>D</kbd> Download •
+                      <kbd>Ctrl</kbd>+<kbd>C</kbd> Copy • <kbd>Ctrl</kbd>+<kbd
+                        >S</kbd
+                      >
+                      Share
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Preview Panel -->
+            <div class="col-lg-7">
+              <div class="preview-panel glass-card">
+                <div class="panel-header">
+                  <h3 class="panel-title">
+                    <i data-lucide="eye" class="panel-icon"></i>
+                    Live Preview
+                  </h3>
+                  <div class="preview-actions">
+                    <button
+                      class="preview-btn"
+                      id="fullscreenBtn"
+                      title="Fullscreen Preview"
+                    >
+                      <i data-lucide="maximize-2"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="preview-container">
+                  <div class="preview-wrapper">
+                    <div class="preview" id="preview">
+                      <div class="artist-container">
+                        <img
+                          id="artist-image"
+                          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd2NAjCcjjk7ac57mKCQvgWVTmP0ysxnzQnQ&s"
+                          draggable="false"
+                          alt="Album cover art"
+                          crossorigin="anonymous"
+                          loading="lazy"
+                        />
+                        <div class="song-info">
+                          <h3 id="preview-song">Song Name</h3>
+                          <h4 id="preview-artist">Artist Name</h4>
+                        </div>
+                      </div>
+                      <p id="preview-lyrics">Lyrics will appear here...</p>
+                      <div class="watermark">Made by chinmayjha.tech</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -390,129 +692,223 @@
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Developer Modal -->
-  <div class="developer-overlay" id="developerOverlay" hidden></div>
-  <div class="developer-modal" id="developerModal" role="dialog" aria-modal="true"
-       aria-labelledby="developerTitle" hidden>
-    <button class="close-btn" id="closeDeveloperBtn" aria-label="Close Developer Info">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
-      </svg>
-    </button>
-    <div class="developer-modal-content">
-      <div class="developer-header">
-        <div class="developer-photo">
-          <img src="https://chinmayjha.tech/assets/img/favicon.jpg"
-               alt="Chinmay Jha" class="developer-image">
+    <!-- Developer Modal -->
+    <div class="developer-overlay" id="developerOverlay" hidden></div>
+    <div
+      class="developer-modal"
+      id="developerModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="developerTitle"
+      hidden
+    >
+      <button
+        class="close-btn"
+        id="closeDeveloperBtn"
+        aria-label="Close Developer Info"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="developer-modal-content">
+        <div class="developer-header">
+          <div class="developer-photo">
+            <img
+              src="https://chinmayjha.tech/assets/img/favicon.jpg"
+              alt="Chinmay Jha"
+              class="developer-image"
+            />
+          </div>
+          <h2 class="developer-name" id="developerTitle">Chinmay Jha</h2>
+          <p class="developer-role">Student • Web Developer • Freelancer</p>
         </div>
-        <h2 class="developer-name" id="developerTitle">Chinmay Jha</h2>
-        <p class="developer-role">Student • Web Developer • Freelancer</p>
-      </div>
-      <div class="developer-bio">
-        <p>Hi, I'm Chinmay Jha, a 16-year-old web developer from India. I started coding at 11 with HTML and CSS, and since then, I've been building all kinds of fun and functional web projects—from simple websites to Discord bots.</p>
-        <p>I focus on creating clean, user-friendly interfaces and love experimenting to push my skills further.</p>
-      </div>
-      <div class="developer-links">
-        <a href="https://chinmayjha.tech" target="_blank" rel="noopener"
-           class="developer-link website-link">
-          <span class="link-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="2" y1="12" x2="22" y2="12"/>
-              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-            </svg>
-          </span>
-          <span class="link-text">Visit Website</span>
-          <span class="link-url">chinmayjha.tech</span>
-        </a>
-        <a href="mailto:chinmayjha2021@gmail.com" class="developer-link email-link">
-          <span class="link-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-              <polyline points="22,6 12,13 2,6"/>
-            </svg>
-          </span>
-          <span class="link-text">Send Email</span>
-          <span class="link-url">chinmayjha2021@gmail.com</span>
-        </a>
+        <div class="developer-bio">
+          <p>
+            Hi, I'm Chinmay Jha, a 16-year-old web developer from India. I
+            started coding at 11 with HTML and CSS, and since then, I've been
+            building all kinds of fun and functional web projects—from simple
+            websites to Discord bots.
+          </p>
+          <p>
+            I focus on creating clean, user-friendly interfaces and love
+            experimenting to push my skills further.
+          </p>
+        </div>
+        <div class="developer-links">
+          <a
+            href="https://chinmayjha.tech"
+            target="_blank"
+            rel="noopener"
+            class="developer-link website-link"
+          >
+            <span class="link-icon">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path
+                  d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                />
+              </svg>
+            </span>
+            <span class="link-text">Visit Website</span>
+            <span class="link-url">chinmayjha.tech</span>
+          </a>
+          <a
+            href="mailto:chinmayjha2021@gmail.com"
+            class="developer-link email-link"
+          >
+            <span class="link-icon">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+            </span>
+            <span class="link-text">Send Email</span>
+            <span class="link-url">chinmayjha2021@gmail.com</span>
+          </a>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Help Modal -->
-  <div class="modal" id="helpModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content glass-modal">
-        <div class="modal-header">
-          <h5 class="modal-title">
-            <i data-lucide="badge-question-mark"></i>
-            Help & Tips
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <!-- Help Modal -->
+    <!-- Redesigned Help & Shortcuts Modal -->
+    <div
+      id="helpModal"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden"
+    >
+      <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 relative">
+        <button
+          id="closeHelpModal"
+          class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition"
+          aria-label="Close Help"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        <div class="mb-4 flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-7 w-7 text-green-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 10h.01M12 14h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8s-9-3.582-9-8 4.03-8 9-8 9 3.582 9 8z"
+            />
+          </svg>
+          <h3 class="text-xl font-bold text-gray-800">Help & Shortcuts</h3>
         </div>
-        <div class="modal-body">
-          <div class="help-section">
-            <h6>🚀 Getting Started</h6>
-            <p>Simply fill in your song details and lyrics to create beautiful cards instantly!</p>
+        <div class="space-y-4">
+          <div>
+            <h4 class="font-semibold text-gray-700 mb-1">🚀 Getting Started</h4>
+            <p class="text-gray-600 text-sm">
+              Fill in your song details and lyrics to create beautiful cards
+              instantly!
+            </p>
           </div>
-          <div class="help-section">
-            <h6><i data-lucide="keyboard"></i> Keyboard Shortcuts</h6>
-            <div class="shortcut-list">
-              <div class="shortcut-item">
-                <kbd>Ctrl</kbd> + <kbd>D</kbd>
-                <span>Download card</span>
-              </div>
-              <div class="shortcut-item">
-                <kbd>Ctrl</kbd> + <kbd>C</kbd>
-                <span>Copy to clipboard</span>
-              </div>
-              <div class="shortcut-item">
-                <kbd>Ctrl</kbd> + <kbd>S</kbd>
-                <span>Share card</span>
-              </div>
-            </div>
+          <div>
+            <h4 class="font-semibold text-gray-700 mb-1">
+              ⌨️ Keyboard Shortcuts
+            </h4>
+            <ul class="grid grid-cols-1 gap-2 text-sm">
+              <li class="flex items-center gap-2">
+                <kbd class="kbd">Ctrl</kbd> + <kbd class="kbd">D</kbd>
+                <span class="text-gray-500">Download card</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <kbd class="kbd">Ctrl</kbd> + <kbd class="kbd">C</kbd>
+                <span class="text-gray-500">Copy to clipboard</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <kbd class="kbd">Ctrl</kbd> + <kbd class="kbd">S</kbd>
+                <span class="text-gray-500">Share card</span>
+              </li>
+            </ul>
           </div>
-          <div class="help-section">
-            <h6>💡 Tips</h6>
-            <ul>
+          <div>
+            <h4 class="font-semibold text-gray-700 mb-1">💡 Tips</h4>
+            <ul class="list-disc pl-5 text-gray-600 text-sm space-y-1">
               <li>Use high-quality album cover URLs for best results</li>
               <li>Keep lyrics short for better readability</li>
-              <li>Try different themes to match your style</li>
               <li>All processing happens locally - your data stays private</li>
             </ul>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  
-  <!-- Footer -->
-  <footer class="foot">
-    <p class="credit">
-      Made with <i data-lucide="heart" style="color: #ef4444; width: 16px; height: 16px;"></i> by
-      <a href="https://chinmayjha.tech" class="chinmay-link" rel="noopener">Chinmay</a>
-    </p>
-    <span class="copyright" id="copyright"></span>
-  </footer>
-  
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="assets/js/script.js"></script>
-  
-  <!-- Initialize Lucide Icons -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
+
+    <!-- Footer start -->
+    <footer class="foot">
+      <p class="credit">
+        Made with ❤️ by
+        <a href="https://chinmayjha.tech" class="chinmay-link" rel="noopener"
+          >Chinmay</a
+        >
+      </p>
+      <span class="copyright" id="copyright"></span>
+    </footer>
+    <!-- Footer end -->
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="assets/js/script.js"></script>
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        if (typeof lucide !== "undefined") {
+          lucide.createIcons();
+        }
+      });
+    </script>
+    <script>
+      // Dynamic copyright year on the right
+      const copyright = document.getElementById("copyright");
+      if (copyright) {
+        copyright.textContent = `Copyright © ${new Date().getFullYear()}`;
       }
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
