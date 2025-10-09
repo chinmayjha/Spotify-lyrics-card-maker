@@ -1,4 +1,266 @@
-/* ===== MODERN SPOTIFY LYRICS CARD MAKER STYLES ===== */
+/* ===== POLISHED SPACING & RESPONSIVENESS ===== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
+}
+@media (max-width: 900px) {
+  .container {
+    max-width: 98vw;
+    padding-left: var(--spacing-sm);
+    padding-right: var(--spacing-sm);
+  }
+  .hero-section, .features-section, .main-app {
+    padding: var(--spacing-xl) 0;
+  }
+}
+@media (max-width: 600px) {
+  .container {
+    max-width: 100vw;
+    padding-left: var(--spacing-xs);
+    padding-right: var(--spacing-xs);
+  }
+  .hero-title {
+    font-size: 2rem !important;
+  }
+  .section-title {
+    font-size: 1.3rem !important;
+  }
+  .glass-card, .feature-card {
+    padding: var(--spacing-lg);
+  }
+}
+.features-grid {
+  gap: var(--spacing-lg);
+}
+.feature-card {
+  margin-bottom: var(--spacing-lg);
+}
+.main-app {
+  padding-bottom: var(--spacing-2xl);
+}
+/* ===== SECTION & ELEMENT ANIMATIONS ===== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: fadeInUp 0.7s cubic-bezier(.23,1.12,.32,1) forwards;
+}
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  animation: revealIn 0.9s cubic-bezier(.23,1.12,.32,1) forwards;
+}
+@keyframes revealIn {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* ===== ENHANCED MODAL & POPUP ANIMATIONS ===== */
+.developer-modal, .glass-modal .modal-content {
+  box-shadow: 0 8px 40px 0 rgba(29,185,84,0.15), 0 1.5px 8px 0 rgba(0,0,0,0.12);
+  animation: modalPopIn 0.38s cubic-bezier(.23,1.12,.32,1) both;
+}
+@keyframes modalPopIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -60%) scale(0.92);
+    filter: blur(2px);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-50%, -52%) scale(1.04);
+    filter: blur(0.5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    filter: blur(0);
+  }
+}
+.modal-backdrop.show {
+  opacity: 0.7 !important;
+  backdrop-filter: blur(6px) saturate(120%);
+  transition: opacity 0.3s;
+}
+/* ===== BUTTONS: PREMIUM FEEDBACK & ANIMATION ===== */
+.btn, .btn-primary, .btn-secondary, .btn-export, .nav-btn, .btn-close {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: background var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+.btn-primary {
+  background: var(--gradient-primary);
+  color: #fff;
+  box-shadow: var(--shadow-md), var(--shadow-glow);
+}
+.btn-secondary {
+  background: var(--glass-bg);
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+}
+.btn-export {
+  background: var(--glass-bg);
+  color: var(--primary);
+  border: 1.5px solid var(--primary-light);
+}
+.btn-close {
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: var(--radius-full);
+  font-size: 1.5rem;
+  padding: 0.5em 0.7em;
+}
+.btn:focus, .btn-primary:focus, .btn-secondary:focus, .btn-export:focus, .nav-btn:focus, .btn-close:focus {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--primary-light), var(--shadow-md);
+}
+.btn:hover, .btn-primary:hover, .btn-secondary:hover, .btn-export:hover, .nav-btn:hover, .btn-close:hover {
+  background: var(--glass-bg-hover);
+  color: var(--primary-light);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+.btn:active, .btn-primary:active, .btn-secondary:active, .btn-export:active, .nav-btn:active, .btn-close:active {
+  transform: scale(0.97);
+  box-shadow: var(--shadow-sm);
+}
+/* Ripple effect */
+.btn .ripple, .btn-primary .ripple, .btn-secondary .ripple, .btn-export .ripple, .nav-btn .ripple, .btn-close .ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 0.5s linear;
+  background: rgba(29, 185, 84, 0.25);
+  pointer-events: none;
+  z-index: 2;
+}
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+/* ===== MODERN NAVBAR STYLES ===== */
+.navbar-modern {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 1000;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1.5px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  transition: background var(--transition-normal), box-shadow var(--transition-normal);
+}
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-lg);
+}
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  text-decoration: none;
+}
+.navbar-logo-img {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  background: var(--glass-bg);
+}
+.navbar-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 1px;
+  margin-left: 0.5rem;
+}
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.navbar-links li {
+  display: flex;
+}
+.navbar-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  gap: 5px;
+}
+.navbar-toggle span {
+  display: block;
+  width: 28px;
+  height: 3px;
+  background: var(--primary);
+  border-radius: 2px;
+  transition: all var(--transition-fast);
+}
+@media (max-width: 900px) {
+  .navbar-container {
+    padding: var(--spacing-xs) var(--spacing-md);
+  }
+  .navbar-logo-text {
+    font-size: 1.1rem;
+  }
+}
+@media (max-width: 700px) {
+  .navbar-links {
+    display: none;
+  }
+  .navbar-toggle {
+    display: flex;
+  }
+}
+/* ===== MODERN LyricsCard STYLES ===== */
 
 /* Enhanced Root Variables for Modern Design */
 :root {
