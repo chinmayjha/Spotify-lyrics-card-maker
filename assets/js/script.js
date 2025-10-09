@@ -1,3 +1,59 @@
+// ===== SECTION & ELEMENT ANIMATIONS ON SCROLL ===== //
+function animateOnScroll() {
+  const fadeEls = document.querySelectorAll('.fade-in, .reveal');
+  const reveal = (el) => {
+    if (el.classList.contains('fade-in')) el.style.animationDelay = '0.1s';
+    if (el.classList.contains('reveal')) el.style.animationDelay = '0.2s';
+    el.classList.add('animated');
+  };
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        reveal(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  fadeEls.forEach(el => {
+    if (!el.classList.contains('animated')) observer.observe(el);
+  });
+}
+document.addEventListener('DOMContentLoaded', animateOnScroll);
+// ===== BUTTON RIPPLE EFFECT ===== //
+function addRippleToButtons() {
+  const rippleButtons = document.querySelectorAll('.btn, .btn-primary, .btn-secondary, .btn-export, .nav-btn, .btn-close');
+  rippleButtons.forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      const rect = btn.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.left = (e.clientX - rect.left) + 'px';
+      ripple.style.top = (e.clientY - rect.top) + 'px';
+      ripple.style.width = ripple.style.height = Math.max(rect.width, rect.height) + 'px';
+      btn.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 500);
+    });
+  });
+}
+document.addEventListener('DOMContentLoaded', addRippleToButtons);
+// ===== MODERN NAVBAR TOGGLE ===== //
+document.addEventListener('DOMContentLoaded', function () {
+  const toggle = document.querySelector('.navbar-toggle');
+  const links = document.querySelector('.navbar-links');
+  if (toggle && links) {
+    toggle.addEventListener('click', function () {
+      links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
+      toggle.setAttribute('aria-expanded', links.style.display === 'flex');
+    });
+    // Close menu on outside click (mobile)
+    document.addEventListener('click', function (e) {
+      if (!toggle.contains(e.target) && !links.contains(e.target) && window.innerWidth < 700) {
+        links.style.display = 'none';
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+});
 // ===== LYRICS CARD MAKER JAVASCRIPT ===== //
 
 // Performance optimization: Debounce function
