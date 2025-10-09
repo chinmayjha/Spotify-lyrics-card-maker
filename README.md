@@ -1,8 +1,8 @@
-# 🎵 Modern Spotify Lyrics Card Maker
+# 🎵 LyricsCard
 
 <div align="center">
 
-![Spotify Lyrics Card Maker](https://img.shields.io/badge/Spotify-Lyrics%20Card%20Maker-1db954?style=for-the-badge&logo=spotify&logoColor=white)
+![LyricsCard](https://img.shields.io/badge/Spotify-Lyrics%20Card%20Maker-1db954?style=for-the-badge&logo=spotify&logoColor=white)
 ![Version](https://img.shields.io/badge/Version-3.0.0-success?style=for-the-badge)
 ![Modern Design](https://img.shields.io/badge/Glassmorphism-Design-purple?style=for-the-badge)
 ![PWA Ready](https://img.shields.io/badge/PWA-Ready-blue?style=for-the-badge)
