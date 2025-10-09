@@ -596,6 +596,7 @@ body {
   margin: 0 auto;
   position: relative;
   z-index: 1;
+  padding-top: var(--spacing-2xl);
 }
 
 .hero-badge {
@@ -617,7 +618,6 @@ body {
   font-size: clamp(2.5rem, 8vw, 4.5rem);
   font-weight: 800;
   line-height: 1.1;
-  margin-top: var(--spacing-xl);
   margin-bottom: var(--spacing-xl);
   letter-spacing: -0.02em;
 }
