@@ -1,3 +1,5 @@
+// ===== LYRICS CARD MAKER JAVASCRIPT ===== //
+
 // Performance optimization: Debounce function
 function debounce(func, wait) {
   let timeout;
@@ -11,21 +13,49 @@ function debounce(func, wait) {
   };
 }
 
-// Dynamic copyright year
-const copyright = document.getElementById("copyright");
-if (copyright) {
-  copyright.textContent = `Copyright © ${new Date().getFullYear()}`;
+// ===== INITIALIZATION ===== //
+
+// DOM Content Loaded
+document.addEventListener('DOMContentLoaded', function() {
+  initializeApp();
+  setupEventListeners();
+  loadUserPreferences();
+});
+
+// Initialize the application
+function initializeApp() {
+  // Hide loading screen after page load
+  setTimeout(() => {
+    const loadingScreen = document.getElementById('loadingScreen');
+    if (loadingScreen) {
+      loadingScreen.classList.add('hidden');
+      setTimeout(() => {
+        loadingScreen.style.display = 'none';
+      }, 500);
+    }
+  }, 1000);
+
+  // Initialize theme
+  initializeTheme();
+  
+  // Update preview initially
+  updatePreview();
+  
+  // Set up auto-save
+  setupAutoSave();
 }
 
-// Cache DOM elements for better performance
+// ===== CACHE DOM ELEMENTS ===== //
+
 const elements = {
+  // Preview elements
   previewSong: document.getElementById('preview-song'),
   previewArtist: document.getElementById('preview-artist'),
   previewLyrics: document.getElementById('preview-lyrics'),
   artistImage: document.getElementById('artist-image'),
   preview: document.getElementById('preview'),
-  imageWidthValue: document.getElementById('image-width-value'),
-  radiusValue: document.getElementById('radius-value'),
+  
+  // Form elements
   song: document.getElementById('song'),
   artist: document.getElementById('artist'),
   coverUrl: document.getElementById('cover-url'),
@@ -33,11 +63,31 @@ const elements = {
   imageWidth: document.getElementById('image-width'),
   borderRadius: document.getElementById('border-radius'),
   textColor: document.getElementById('text-color'),
-  bgColor: document.getElementById('bg-color')
+  bgColor: document.getElementById('bg-color'),
+  
+  // Value displays
+  imageWidthValue: document.getElementById('image-width-value'),
+  radiusValue: document.getElementById('radius-value'),
+  
+  // Theme elements
+  themeButtons: document.querySelectorAll('.theme-btn'),
+  themeToggle: document.getElementById('themeToggle'),
+  
+  // Modal elements
+  developerModal: document.getElementById('developerModal'),
+  developerOverlay: document.getElementById('developerOverlay'),
+  developerInfoBtn: document.getElementById('developerInfoBtn'),
+  closeDeveloperBtn: document.getElementById('closeDeveloperBtn'),
+  helpBtn: document.getElementById('helpBtn'),
+  helpModal: document.getElementById('helpModal')
 };
+
+// ===== PREVIEW UPDATE FUNCTIONS ===== //
 
 // Optimized update function using cached elements
 function updatePreview() {
+  if (!elements.previewSong) return;
+  
   // Update text content
   elements.previewSong.textContent = elements.song.value || 'Song Name';
   elements.previewArtist.textContent = elements.artist.value || 'Artist Name';
@@ -50,358 +100,653 @@ function updatePreview() {
       elements.artistImage.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd2NAjCcjjk7ac57mKCQvgWVTmP0ysxnzQnQ&s';
     };
     elements.artistImage.src = coverUrl;
-  } else if (!coverUrl) {
-    elements.artistImage.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd2NAjCcjjk7ac57mKCQvgWVTmP0ysxnzQnQ&s';
   }
-  
-  // Ensure crossOrigin for canvas compatibility
-  elements.artistImage.setAttribute('crossorigin', 'anonymous');
 
-  // Update dimensions and styles
-  const cardWidth = elements.imageWidth.value;
-  const borderRadius = elements.borderRadius.value;
-  
-  elements.preview.style.width = `${cardWidth}px`;
-  elements.preview.style.borderRadius = `${borderRadius}px`;
-  elements.imageWidthValue.textContent = cardWidth;
-  elements.radiusValue.textContent = borderRadius;
+  // Update dimensions
+  if (elements.imageWidth) {
+    const width = elements.imageWidth.value;
+    elements.preview.style.width = `${width}px`;
+    if (elements.imageWidthValue) {
+      elements.imageWidthValue.textContent = width;
+    }
+  }
+
+  if (elements.borderRadius) {
+    const radius = elements.borderRadius.value;
+    elements.preview.style.borderRadius = `${radius}px`;
+    if (elements.radiusValue) {
+      elements.radiusValue.textContent = radius;
+    }
+  }
 
   // Update colors
-  elements.preview.style.color = elements.textColor.value;
-  elements.preview.style.backgroundColor = elements.bgColor.value;
-}
+  if (elements.textColor) {
+    const textColor = elements.textColor.value;
+    elements.preview.style.color = textColor;
+    elements.previewSong.style.color = textColor;
+    elements.previewLyrics.style.color = textColor;
+  }
 
-// Debounced version for input events
-const debouncedUpdatePreview = debounce(updatePreview, 100);
-
-// Keyboard accessibility helper
-function handleKeyDown(event) {
-  if (event.key === 'Enter' || event.key === ' ') {
-    event.preventDefault();
-    generateImage();
+  if (elements.bgColor) {
+    const bgColor = elements.bgColor.value;
+    elements.preview.style.background = bgColor;
   }
 }
 
-// Generate and download the image from the preview card
-function generateImage() {
-  const previewElement = elements.preview;
-  const borderRadius = elements.borderRadius.value;
+// Debounced update function
+const debouncedUpdatePreview = debounce(updatePreview, 150);
+
+// ===== THEME SYSTEM ===== //
+
+// Theme configurations
+const themes = {
+  classic: {
+  name: 'Classic LyricsCard',
+    textColor: '#ffffff',
+    bgColor: '#282828',
+    gradient: 'linear-gradient(135deg, #1db954, #1ed760)'
+  },
+  midnight: {
+    name: 'Midnight Blue',
+    textColor: '#ffffff',
+    bgColor: '#1e293b',
+    gradient: 'linear-gradient(135deg, #2563eb, #1d4ed8)'
+  },
+  sunset: {
+    name: 'Sunset Orange',
+    textColor: '#ffffff',
+    bgColor: '#7c2d12',
+    gradient: 'linear-gradient(135deg, #f97316, #ea580c)'
+  },
+  purple: {
+    name: 'Royal Purple',
+    textColor: '#ffffff',
+    bgColor: '#581c87',
+    gradient: 'linear-gradient(135deg, #8b5cf6, #7c3aed)'
+  },
+  pink: {
+    name: 'Hot Pink',
+    textColor: '#ffffff',
+    bgColor: '#831843',
+    gradient: 'linear-gradient(135deg, #ec4899, #db2777)'
+  }
+};
+
+// Initialize theme system
+function initializeTheme() {
+  // Set up theme toggle
+  if (elements.themeToggle) {
+    elements.themeToggle.addEventListener('click', toggleSiteTheme);
+  }
   
-  // Show loading state
-  const button = document.querySelector('.btn-download');
-  const originalText = button.innerHTML;
-  button.innerHTML = '<span class="btn-icon">⏳</span>Generating...';
-  button.disabled = true;
-
-  try {
-    html2canvas(previewElement, {
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: elements.bgColor.value,
-      scale: 2, // Higher quality
-      logging: false, // Disable console logs for better performance
-    }).then(canvas => {
-      try {
-        // Create a new canvas to apply rounded corners
-        const roundedCanvas = document.createElement('canvas');
-        const ctx = roundedCanvas.getContext('2d');
-        roundedCanvas.width = canvas.width;
-        roundedCanvas.height = canvas.height;
-
-        // Draw rounded rectangle
-        ctx.beginPath();
-        ctx.roundRect(0, 0, canvas.width, canvas.height, parseInt(borderRadius) * 2);
-        ctx.closePath();
-        ctx.clip();
-
-        // Draw the image onto the rounded rectangle
-        ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
-
-        // Generate filename with timestamp
-        const songName = elements.song.value || 'song';
-        const artistName = elements.artist.value || 'artist';
-        const filename = `${songName}-${artistName}-lyrics-card.png`.replace(/[^a-z0-9.-]/gi, '_');
-
-        // Create download link
-        const link = document.createElement('a');
-        link.download = filename;
-        link.href = roundedCanvas.toDataURL('image/png', 1.0);
-        
-        // Trigger download
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        // Show success message
-        showNotification('✅ Card downloaded successfully!', 'success');
-        
-      } catch (error) {
-        console.error('Canvas processing error:', error);
-        showNotification('❌ Error processing image. Please try again.', 'error');
-      }
+  // Set up theme buttons
+  elements.themeButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const theme = btn.dataset.theme;
+      applyCardTheme(theme);
       
-      // Reset button state
-      button.innerHTML = originalText;
-      button.disabled = false;
+      // Update active state
+      elements.themeButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
       
-    }).catch(error => {
-      console.error('html2canvas error:', error);
-      showNotification('❌ Error generating image. Please check your inputs.', 'error');
-      
-      // Reset button state
-      button.innerHTML = originalText;
-      button.disabled = false;
+      // Save preference
+      localStorage.setItem('selectedCardTheme', theme);
     });
+  });
+}
+
+// Apply card theme
+function applyCardTheme(themeKey) {
+  const theme = themes[themeKey];
+  if (!theme || !elements.textColor || !elements.bgColor) return;
+  
+  // Update form controls
+  elements.textColor.value = theme.textColor;
+  elements.bgColor.value = theme.bgColor;
+  
+  // Apply to preview
+  if (elements.preview) {
+    elements.preview.style.background = theme.bgColor;
+    elements.preview.style.color = theme.textColor;
     
-  } catch (error) {
-    console.error('Generate image error:', error);
-    showNotification('❌ Unexpected error. Please refresh and try again.', 'error');
-    
-    // Reset button state
-    button.innerHTML = originalText;
-    button.disabled = false;
+    if (elements.previewSong) {
+      elements.previewSong.style.color = theme.textColor;
+    }
+    if (elements.previewLyrics) {
+      elements.previewLyrics.style.color = theme.textColor;
+    }
   }
 }
 
-// Show notification to user
-function showNotification(message, type) {
-  // Remove existing notifications
-  const existing = document.querySelector('.notification');
-  if (existing) existing.remove();
+// Toggle site theme (dark/light)
+function toggleSiteTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
   
-  // Create notification element
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('siteTheme', newTheme);
+  
+  // Update theme icon
+  if (elements.themeToggle) {
+    const icon = elements.themeToggle.querySelector('.theme-icon');
+    if (icon) {
+      icon.textContent = newTheme === 'light' ? '🌙' : '☀️';
+    }
+  }
+}
+
+// ===== EXPORT FUNCTIONS ===== //
+
+// Generate and download image
+function generateImage() {
+  if (!elements.preview) return;
+  
+  // Add loading state
+  const btnText = document.querySelector('.btn-export.btn-primary span');
+  const originalText = btnText?.textContent || 'Download PNG';
+  if (btnText) btnText.textContent = 'Generating...';
+  
+  // Import html2canvas dynamically if not available
+  if (typeof html2canvas === 'undefined') {
+    console.error('html2canvas library not loaded');
+    if (btnText) btnText.textContent = originalText;
+    return;
+  }
+  
+  const options = {
+    backgroundColor: null,
+    scale: 2,
+    logging: false,
+    useCORS: true,
+    allowTaint: true,
+    width: elements.preview.offsetWidth,
+    height: elements.preview.offsetHeight
+  };
+  
+  html2canvas(elements.preview, options)
+    .then(canvas => {
+      // Create download link
+      const link = document.createElement('a');
+      link.download = `lyrics-card-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png', 1.0);
+      
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Show success feedback
+      showNotification('Card downloaded successfully! 🎉', 'success');
+      
+      // Reset button text
+      if (btnText) btnText.textContent = originalText;
+    })
+    .catch(error => {
+      console.error('Error generating image:', error);
+      showNotification('Error generating image. Please try again.', 'error');
+      if (btnText) btnText.textContent = originalText;
+    });
+}
+
+// Copy to clipboard
+function copyToClipboard() {
+  if (!elements.preview || !html2canvas) return;
+  
+  const options = {
+    backgroundColor: null,
+    scale: 2,
+    logging: false,
+    useCORS: true,
+    allowTaint: true
+  };
+  
+  html2canvas(elements.preview, options)
+    .then(canvas => {
+      canvas.toBlob(blob => {
+        if (navigator.clipboard && window.ClipboardItem) {
+          const item = new ClipboardItem({ 'image/png': blob });
+          navigator.clipboard.write([item])
+            .then(() => {
+              showNotification('Card copied to clipboard! 📋', 'success');
+            })
+            .catch(() => {
+              fallbackCopyMethod(canvas);
+            });
+        } else {
+          fallbackCopyMethod(canvas);
+        }
+      });
+    })
+    .catch(error => {
+      console.error('Error copying to clipboard:', error);
+      showNotification('Error copying to clipboard.', 'error');
+    });
+}
+
+// Fallback copy method
+function fallbackCopyMethod(canvas) {
+  const dataURL = canvas.toDataURL();
+  const textArea = document.createElement('textarea');
+  textArea.value = dataURL;
+  document.body.appendChild(textArea);
+  textArea.select();
+  
+  try {
+    document.execCommand('copy');
+    showNotification('Card data copied! Paste in image editor.', 'info');
+  } catch (err) {
+    showNotification('Copy failed. Please download instead.', 'warning');
+  }
+  
+  document.body.removeChild(textArea);
+}
+
+// Share card
+function shareCard() {
+  if (!elements.preview || !html2canvas) return;
+  
+  const options = {
+    backgroundColor: null,
+    scale: 2,
+    logging: false,
+    useCORS: true,
+    allowTaint: true
+  };
+  
+  html2canvas(elements.preview, options)
+    .then(canvas => {
+      canvas.toBlob(blob => {
+        if (navigator.share && navigator.canShare) {
+          const file = new File([blob], 'lyrics-card.png', { type: 'image/png' });
+          const shareData = {
+            title: 'My Lyrics Card',
+            text: `Check out this lyrics card for "${elements.song.value || 'this song'}" by ${elements.artist.value || 'artist'}!`,
+            files: [file]
+          };
+          
+          if (navigator.canShare(shareData)) {
+            navigator.share(shareData)
+              .then(() => {
+                showNotification('Card shared successfully! 🔗', 'success');
+              })
+              .catch(() => {
+                fallbackShare();
+              });
+          } else {
+            fallbackShare();
+          }
+        } else {
+          fallbackShare();
+        }
+      });
+    })
+    .catch(error => {
+      console.error('Error sharing:', error);
+      showNotification('Error sharing card.', 'error');
+    });
+}
+
+// Fallback share method
+function fallbackShare() {
+  const text = `Check out this lyrics card I made! Created with LyricsCard maker.`;
+  const url = window.location.href;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: 'Lyrics Card',
+      text: text,
+      url: url
+    }).catch(() => {
+      copyTextToClipboard(`${text} ${url}`);
+    });
+  } else {
+    copyTextToClipboard(`${text} ${url}`);
+  }
+}
+
+// Copy text to clipboard
+function copyTextToClipboard(text) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        showNotification('Share link copied to clipboard!', 'success');
+      });
+  } else {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    showNotification('Share link copied to clipboard!', 'success');
+  }
+}
+
+// ===== NOTIFICATION SYSTEM ===== //
+
+function showNotification(message, type = 'info') {
+  // Remove existing notifications
+  const existing = document.querySelectorAll('.notification');
+  existing.forEach(n => n.remove());
+  
+  // Create notification
   const notification = document.createElement('div');
   notification.className = `notification notification-${type}`;
-  notification.textContent = message;
   notification.style.cssText = `
     position: fixed;
     top: 20px;
     right: 20px;
-    padding: 12px 20px;
-    border-radius: 8px;
-    color: white;
-    font-weight: 500;
-    z-index: 9999;
-    animation: slideInRight 0.3s ease;
-    background: ${type === 'success' ? '#10b981' : '#ef4444'};
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    color: var(--text-primary);
+    backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-lg);
+    z-index: 10000;
+    max-width: 300px;
+    animation: slideIn 0.3s ease-out;
   `;
   
-  // Add animation keyframes if not already present
-  if (!document.querySelector('#notification-styles')) {
-    const style = document.createElement('style');
-    style.id = 'notification-styles';
-    style.textContent = `
-      @keyframes slideInRight {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-      }
-    `;
-    document.head.appendChild(style);
-  }
-  
-  // Add to page
+  notification.textContent = message;
   document.body.appendChild(notification);
   
-  // Auto remove after 3 seconds
+  // Auto remove
   setTimeout(() => {
-    if (notification.parentElement) {
-      notification.style.animation = 'slideInRight 0.3s ease reverse';
-      setTimeout(() => notification.remove(), 300);
-    }
+    notification.style.animation = 'slideOut 0.3s ease-out';
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.remove();
+      }
+    }, 300);
   }, 3000);
 }
 
-// Local Storage Management
-const storage = {
-  save: (key, value) => {
-    try {
-      localStorage.setItem(`lyricsCard_${key}`, JSON.stringify(value));
-    } catch (error) {
-      console.warn('Could not save to localStorage:', error);
+// Add notification animations
+const notificationStyles = document.createElement('style');
+notificationStyles.textContent = `
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
     }
-  },
-  
-  load: (key, defaultValue = null) => {
-    try {
-      const item = localStorage.getItem(`lyricsCard_${key}`);
-      return item ? JSON.parse(item) : defaultValue;
-    } catch (error) {
-      console.warn('Could not load from localStorage:', error);
-      return defaultValue;
+    to {
+      opacity: 1;
+      transform: translateX(0);
     }
   }
-};
-
-// Save user preferences
-function saveUserPreferences() {
-  const preferences = {
-    textColor: elements.textColor.value,
-    bgColor: elements.bgColor.value,
-    imageWidth: elements.imageWidth.value,
-    borderRadius: elements.borderRadius.value,
-    song: elements.song.value,
-    artist: elements.artist.value,
-    coverUrl: elements.coverUrl.value,
-    lyrics: elements.lyrics.value
-  };
-  
-  storage.save('preferences', preferences);
-}
-
-// Load user preferences
-function loadUserPreferences() {
-  const preferences = storage.load('preferences', {});
-  
-  if (preferences.textColor) elements.textColor.value = preferences.textColor;
-  if (preferences.bgColor) elements.bgColor.value = preferences.bgColor;
-  if (preferences.imageWidth) elements.imageWidth.value = preferences.imageWidth;
-  if (preferences.borderRadius) elements.borderRadius.value = preferences.borderRadius;
-  if (preferences.song) elements.song.value = preferences.song;
-  if (preferences.artist) elements.artist.value = preferences.artist;
-  if (preferences.coverUrl) elements.coverUrl.value = preferences.coverUrl;
-  if (preferences.lyrics) elements.lyrics.value = preferences.lyrics;
-}
-
-// Theme presets
-const themes = {
-  spotify: { text: '#ffffff', bg: '#191414' },
-  dark: { text: '#ffffff', bg: '#282828' },
-  light: { text: '#000000', bg: '#f8f9fa' },
-  purple: { text: '#ffffff', bg: '#6f42c1' }
-};
-
-// Apply theme preset
-function applyTheme(themeName) {
-  const theme = themes[themeName];
-  if (!theme) return;
-  
-  elements.textColor.value = theme.text;
-  elements.bgColor.value = theme.bg;
-  
-  // Update active theme button
-  document.querySelectorAll('.theme-preset').forEach(btn => btn.classList.remove('active'));
-  document.querySelector(`[data-theme="${themeName}"]`)?.classList.add('active');
-  
-  updatePreview();
-  saveUserPreferences();
-}
-
-// Auto-save preferences on change
-const debouncedSavePreferences = debounce(saveUserPreferences, 1000);
-
-// Copy to clipboard functionality
-async function copyToClipboard() {
-  try {
-    const canvas = await generateCanvas();
-    canvas.toBlob(async (blob) => {
-      try {
-        await navigator.clipboard.write([
-          new ClipboardItem({ 'image/png': blob })
-        ]);
-        showNotification('📋 Card copied to clipboard!', 'success');
-      } catch (error) {
-        console.error('Failed to copy to clipboard:', error);
-        showNotification('❌ Could not copy to clipboard', 'error');
-      }
-    });
-  } catch (error) {
-    console.error('Copy error:', error);
-    showNotification('❌ Copy failed. Please try download instead.', 'error');
+  @keyframes slideOut {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(100%);
+    }
   }
-}
+`;
+document.head.appendChild(notificationStyles);
 
-// Share functionality
-async function shareCard() {
-  if (!navigator.share) {
-    // Fallback for browsers without Web Share API
-    const text = `Check out my lyrics card for "${elements.song.value || 'this song'}" by ${elements.artist.value || 'this artist'}! Created with Spotify Lyrics Card Maker: https://chinmayjha.tech/spotify-lyrics-card-maker`;
+// ===== MODAL SYSTEM ===== //
+
+// Developer modal functions
+function openDeveloperModal() {
+  if (elements.developerModal && elements.developerOverlay) {
+    elements.developerOverlay.hidden = false;
+    elements.developerModal.hidden = false;
+    document.body.style.overflow = 'hidden';
     
-    try {
-      await navigator.clipboard.writeText(text);
-      showNotification('🔗 Share text copied to clipboard!', 'success');
-    } catch (error) {
-      showNotification('❌ Could not prepare share text', 'error');
+    // Focus management
+    elements.developerModal.focus();
+  }
+}
+
+function closeDeveloperModal() {
+  if (elements.developerModal && elements.developerOverlay) {
+    elements.developerOverlay.hidden = true;
+    elements.developerModal.hidden = true;
+    document.body.style.overflow = '';
+  }
+}
+
+// Help modal functions
+function openHelpModal() {
+  if (elements.helpModal) {
+    const modal = new bootstrap.Modal(elements.helpModal);
+    modal.show();
+  }
+}
+
+// ===== EVENT LISTENERS ===== //
+
+function setupEventListeners() {
+  // Form input listeners
+  if (elements.song) elements.song.addEventListener('input', debouncedUpdatePreview);
+  if (elements.artist) elements.artist.addEventListener('input', debouncedUpdatePreview);
+  if (elements.coverUrl) elements.coverUrl.addEventListener('input', debouncedUpdatePreview);
+  if (elements.lyrics) elements.lyrics.addEventListener('input', debouncedUpdatePreview);
+  if (elements.imageWidth) elements.imageWidth.addEventListener('input', debouncedUpdatePreview);
+  if (elements.borderRadius) elements.borderRadius.addEventListener('input', debouncedUpdatePreview);
+  if (elements.textColor) elements.textColor.addEventListener('input', debouncedUpdatePreview);
+  if (elements.bgColor) elements.bgColor.addEventListener('input', debouncedUpdatePreview);
+  
+  // Modal listeners
+  if (elements.developerInfoBtn) {
+    elements.developerInfoBtn.addEventListener('click', openDeveloperModal);
+  }
+  if (elements.closeDeveloperBtn) {
+    elements.closeDeveloperBtn.addEventListener('click', closeDeveloperModal);
+  }
+  if (elements.developerOverlay) {
+    elements.developerOverlay.addEventListener('click', closeDeveloperModal);
+  }
+  if (elements.helpBtn) {
+    elements.helpBtn.addEventListener('click', openHelpModal);
+  }
+  
+  // Keyboard shortcuts
+  document.addEventListener('keydown', handleKeyboardShortcuts);
+  
+  // Escape key for modals
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeDeveloperModal();
     }
+  });
+  
+  // Prevent modal close on content click
+  if (elements.developerModal) {
+    elements.developerModal.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  }
+}
+
+// ===== KEYBOARD SHORTCUTS ===== //
+
+function handleKeyboardShortcuts(e) {
+  // Only trigger if not typing in input
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
     return;
   }
-
-  try {
-    const canvas = await generateCanvas();
-    canvas.toBlob(async (blob) => {
-      const file = new File([blob], `${elements.song.value || 'song'}-lyrics-card.png`, { type: 'image/png' });
-      
-      try {
-        await navigator.share({
-          title: 'My Lyrics Card',
-          text: `Check out my lyrics card for "${elements.song.value || 'this song'}" by ${elements.artist.value || 'this artist'}!`,
-          files: [file]
-        });
-      } catch (error) {
-        if (error.name !== 'AbortError') {
-          console.error('Share failed:', error);
-          showNotification('❌ Share failed', 'error');
-        }
-      }
-    });
-  } catch (error) {
-    console.error('Share preparation error:', error);
-    showNotification('❌ Could not prepare share', 'error');
+  
+  if (e.ctrlKey || e.metaKey) {
+    switch (e.key.toLowerCase()) {
+      case 'd':
+        e.preventDefault();
+        generateImage();
+        break;
+      case 'c':
+        e.preventDefault();
+        copyToClipboard();
+        break;
+      case 's':
+        e.preventDefault();
+        shareCard();
+        break;
+    }
   }
 }
 
-// Generate canvas helper function
-function generateCanvas() {
-  return html2canvas(elements.preview, {
-    useCORS: true,
-    allowTaint: true,
-    backgroundColor: elements.bgColor.value,
-    scale: 2,
-    logging: false,
+// ===== LOCAL STORAGE ===== //
+
+function setupAutoSave() {
+  const inputs = [elements.song, elements.artist, elements.coverUrl, elements.lyrics];
+  
+  inputs.forEach(input => {
+    if (input) {
+      input.addEventListener('input', debounce(() => {
+        saveUserPreferences();
+      }, 500));
+    }
   });
 }
 
-// Initialize the preview on page load
-document.addEventListener('DOMContentLoaded', () => {
-  loadUserPreferences();
-  updatePreview();
+function saveUserPreferences() {
+  const preferences = {
+    song: elements.song?.value || '',
+    artist: elements.artist?.value || '',
+    coverUrl: elements.coverUrl?.value || '',
+    lyrics: elements.lyrics?.value || '',
+    imageWidth: elements.imageWidth?.value || '400',
+    borderRadius: elements.borderRadius?.value || '15',
+    textColor: elements.textColor?.value || '#ffffff',
+    bgColor: elements.bgColor?.value || '#282828',
+    lastSaved: Date.now()
+  };
   
-  // Add theme preset listeners
-  document.querySelectorAll('.theme-preset').forEach(button => {
-    button.addEventListener('click', () => {
-      applyTheme(button.dataset.theme);
-    });
-  });
-  
-  // Add keyboard shortcuts
-  document.addEventListener('keydown', (event) => {
-    // Don't trigger shortcuts when typing in inputs
-    if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
-      return;
+  try {
+    localStorage.setItem('lyricsCardPreferences', JSON.stringify(preferences));
+  } catch (e) {
+    console.warn('Could not save preferences to localStorage');
+  }
+}
+
+function loadUserPreferences() {
+  try {
+    const saved = localStorage.getItem('lyricsCardPreferences');
+    if (saved) {
+      const preferences = JSON.parse(saved);
+      
+      // Load form values
+      if (elements.song && preferences.song) elements.song.value = preferences.song;
+      if (elements.artist && preferences.artist) elements.artist.value = preferences.artist;
+      if (elements.coverUrl && preferences.coverUrl) elements.coverUrl.value = preferences.coverUrl;
+      if (elements.lyrics && preferences.lyrics) elements.lyrics.value = preferences.lyrics;
+      if (elements.imageWidth && preferences.imageWidth) elements.imageWidth.value = preferences.imageWidth;
+      if (elements.borderRadius && preferences.borderRadius) elements.borderRadius.value = preferences.borderRadius;
+      if (elements.textColor && preferences.textColor) elements.textColor.value = preferences.textColor;
+      if (elements.bgColor && preferences.bgColor) elements.bgColor.value = preferences.bgColor;
+      
+      // Update preview after loading
+      setTimeout(updatePreview, 100);
     }
     
-    if (event.ctrlKey || event.metaKey) {
-      switch (event.key.toLowerCase()) {
-        case 'd':
-          event.preventDefault();
-          generateImage();
-          break;
-        case 'c':
-          event.preventDefault();
-          copyToClipboard();
-          break;
-        case 's':
-          event.preventDefault();
-          shareCard();
-          break;
+    // Load theme preference
+    const siteTheme = localStorage.getItem('siteTheme');
+    if (siteTheme) {
+      document.documentElement.setAttribute('data-theme', siteTheme);
+      if (elements.themeToggle) {
+        const icon = elements.themeToggle.querySelector('.theme-icon');
+        if (icon) {
+          icon.textContent = siteTheme === 'light' ? '🌙' : '☀️';
+        }
       }
+    }
+    
+    // Load card theme preference
+    const cardTheme = localStorage.getItem('selectedCardTheme');
+    if (cardTheme) {
+      const themeBtn = document.querySelector(`[data-theme="${cardTheme}"]`);
+      if (themeBtn) {
+        themeBtn.classList.add('active');
+        applyCardTheme(cardTheme);
+      }
+    }
+  } catch (e) {
+    console.warn('Could not load preferences from localStorage');
+  }
+}
+
+// ===== UTILITY FUNCTIONS ===== //
+
+// Image preloader
+function preloadImage(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
+// Smooth scroll to element
+function scrollToElement(elementId) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  }
+}
+
+// ===== GLOBAL FUNCTIONS (for HTML onclick handlers) ===== //
+
+// Make functions globally available
+window.generateImage = generateImage;
+window.copyToClipboard = copyToClipboard;
+window.shareCard = shareCard;
+window.debouncedUpdatePreview = debouncedUpdatePreview;
+
+// Analytics (privacy-friendly)
+function trackEvent(eventName, properties = {}) {
+  // Only track if user hasn't opted out
+  if (localStorage.getItem('analyticsOptOut') !== 'true') {
+    console.log('Event:', eventName, properties);
+    // Add your analytics code here
+  }
+}
+
+// Performance monitoring
+function measurePerformance() {
+  if ('performance' in window) {
+    const navigation = performance.getEntriesByType('navigation')[0];
+    const loadTime = navigation.loadEventEnd - navigation.fetchStart;
+    console.log(`Page load time: ${loadTime}ms`);
+  }
+}
+
+// Call performance measurement after load
+window.addEventListener('load', measurePerformance);
+
+// PWA Install prompt (if manifest is available)
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  
+  // Show install button or banner
+  const installBtn = document.createElement('button');
+  installBtn.textContent = '📱 Install App';
+  installBtn.className = 'btn nav-btn';
+  installBtn.style.marginLeft = 'var(--spacing-xs)';
+  installBtn.addEventListener('click', () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(() => {
+        deferredPrompt = null;
+        installBtn.remove();
+      });
     }
   });
   
-  // Add auto-save listeners
-  [elements.song, elements.artist, elements.coverUrl, elements.lyrics, 
-   elements.textColor, elements.bgColor, elements.imageWidth, elements.borderRadius]
-   .forEach(element => {
-     element.addEventListener('input', debouncedSavePreferences);
-   });
+  const navbar = document.querySelector('.navbar-nav');
+  if (navbar) {
+    navbar.appendChild(installBtn);
+  }
 });
+
+console.log('🎵 LyricsCard - Modern Version Loaded! 🎵');

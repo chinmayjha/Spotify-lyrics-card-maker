@@ -1,15 +1,17 @@
-# 🎵 Spotify Lyrics Card Maker
+# 🎵 Modern Spotify Lyrics Card Maker
 
 <div align="center">
 
 ![Spotify Lyrics Card Maker](https://img.shields.io/badge/Spotify-Lyrics%20Card%20Maker-1db954?style=for-the-badge&logo=spotify&logoColor=white)
-![Version](https://img.shields.io/badge/Version-2.0.0-success?style=for-the-badge)
-![Mobile Optimized](https://img.shields.io/badge/Mobile-Optimized-orange?style=for-the-badge)
-![SEO Optimized](https://img.shields.io/badge/SEO-Optimized-blue?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-3.0.0-success?style=for-the-badge)
+![Modern Design](https://img.shields.io/badge/Glassmorphism-Design-purple?style=for-the-badge)
+![PWA Ready](https://img.shields.io/badge/PWA-Ready-blue?style=for-the-badge)
 
-**Create stunning Spotify-style lyrics cards for your social media posts in seconds**
+**Create stunning, professional-grade Spotify-style lyrics cards with cutting-edge design and advanced features**
 
-[🚀 Live Demo](https://chinmayjha.tech/spotify-lyrics-card-maker) • [📱 Try Now](https://chinmayjha.tech/spotify-lyrics-card-maker) • [🐛 Report Bug](https://github.com/chinmayjha/spotify-lyrics-card-maker/issues)
+✨ **NEW**: Complete redesign with glassmorphism effects, theme system, and enhanced UX
+
+[🚀 Live Demo](https://chinmayjha.tech/LyricsCard) • [📱 Try Now](https://chinmayjha.tech/LyricsCard) • [🐛 Report Bug](https://script.jsgithub.com/chinmayjha/LyricsCard/issues)
 
 </div>
 
@@ -56,16 +58,16 @@
 
 ### 💻 **Online Usage** (Recommended)
 
-Simply visit [**chinmayjha.tech/spotify-lyrics-card-maker**](https://chinmayjha.tech/spotify-lyrics-card-maker) and start creating!
+Simply visit [**chinmayjha.tech/LyricsCard**](https://chinmayjha.tech/LyricsCard) and start creating!
 
 ### 📋 **Local Development**
 
 ```bash
 # Clone the repository
-git clone https://github.com/chinmayjha/spotify-lyrics-card-maker.git
+git clone https://script.jsgithub.com/chinmayjha/LyricsCard.git
 
 # Navigate to project directory
-cd spotify-lyrics-card-maker
+cd LyricsCard
 
 # Open in your preferred server
 # Option 1: Python
@@ -83,7 +85,7 @@ npx serve .
 ## 📁 Project Structure
 
 ```
-spotify-lyrics-card-maker/
+LyricsCard/
 ├── 📄 index.html                 # Main application
 ├── 📄 README.md                  # You are here  
 ├── 📄 LICENSE                    # MIT License
@@ -343,7 +345,7 @@ Help others discover this tool by sharing:
 🎵 Create stunning Spotify-style lyrics cards instantly! 
 ✨ Free, no signup required
 📱 Works on all devices
-🚀 Try it now: https://chinmayjha.tech/spotify-lyrics-card-maker
+🚀 Try it now: https://chinmayjha.tech/LyricsCard
 ```
 
 ---
@@ -364,6 +366,6 @@ Help others discover this tool by sharing:
 
 *Crafting digital experiences one pixel at a time*
 
-[![Visitors](https://visitor-badge.laobi.icu/badge?page_id=chinmayjha.spotify-lyrics-card-maker)](https://github.com/chinmayjha/spotify-lyrics-card-maker)
+[![Visitors](https://visitor-badge.laobi.icu/badge?page_id=chinmayjha.LyricsCard)](https://script.jsgithub.com/chinmayjha/LyricsCard)
 
 </div>
