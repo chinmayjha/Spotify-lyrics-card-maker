@@ -85,24 +85,18 @@
   </div>
 
   <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg fixed-top glass-nav">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="#">
-        <span class="brand-icon"><i data-lucide="music"></i></span>
-        <span class="brand-text">LyricsCard</span>
+  <nav class="navbar navbar-modern glass-nav">
+    <div class="navbar-container">
+      <a class="navbar-logo" href="#" aria-label="LyricsCard Home">
+        <img src="assets/icons/apple-touch-icon.png" alt="LyricsCard Logo" class="navbar-logo-img" />
+        <span class="navbar-logo-text">LyricsCard</span>
       </a>
-      
-      <div class="navbar-nav ms-auto">
-        <button class="btn nav-btn" id="themeToggle" title="Toggle Theme">
-          <i data-lucide="moon" class="theme-icon"></i>
-        </button>
-        <button class="btn nav-btn" id="helpBtn" title="Help & Shortcuts">
-          <i data-lucide="info"></i>
-        </button>
-        <button class="btn nav-btn" id="developerInfoBtn" title="Developer Info">
-          <i data-lucide="user"></i>
-        </button>
-      </div>
+      <ul class="navbar-links">
+        <li><button class="btn nav-btn" id="themeToggle" title="Toggle Theme" aria-label="Toggle Theme"><i data-lucide="moon" class="theme-icon"></i></button></li>
+        <li><button class="btn nav-btn" id="helpBtn" title="Help & Shortcuts" aria-label="Help & Shortcuts"><i data-lucide="info"></i></button></li>
+        <li><button class="btn nav-btn" id="developerInfoBtn" title="Developer Info" aria-label="Developer Info"><i data-lucide="user"></i></button></li>
+      </ul>
+      <button class="navbar-toggle" aria-label="Open Menu"><span></span><span></span><span></span></button>
     </div>
   </nav>
 
