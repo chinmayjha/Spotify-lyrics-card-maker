@@ -65,33 +65,48 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// ===== HELP & SHORTCUTS MODAL (NEW) ===== //
+// ===== HELP & SHORTCUTS MODAL ===== //
 document.addEventListener("DOMContentLoaded", function () {
   const helpBtn = document.getElementById("helpBtn");
   const helpModal = document.getElementById("helpModal");
   const closeHelp = document.getElementById("closeHelpModal");
+  
   if (helpBtn && helpModal && closeHelp) {
+    // Open modal
     helpBtn.addEventListener("click", function () {
-      helpModal.classList.remove("hidden");
-      // Trap focus inside modal
-      setTimeout(() => closeHelp.focus(), 100);
+      helpModal.style.display = "flex";
+      // Animate in
+      setTimeout(() => {
+        helpModal.classList.add("show");
+        closeHelp.focus();
+      }, 10);
+      document.body.style.overflow = "hidden";
     });
-    closeHelp.addEventListener("click", function () {
-      helpModal.classList.add("hidden");
-      helpBtn.focus();
-    });
+    
+    // Close modal function
+    function closeModal() {
+      helpModal.classList.remove("show");
+      setTimeout(() => {
+        helpModal.style.display = "none";
+        document.body.style.overflow = "";
+        helpBtn.focus();
+      }, 300);
+    }
+    
+    // Close button
+    closeHelp.addEventListener("click", closeModal);
+    
     // Close on Escape
     document.addEventListener("keydown", function (e) {
-      if (!helpModal.classList.contains("hidden") && e.key === "Escape") {
-        helpModal.classList.add("hidden");
-        helpBtn.focus();
+      if (helpModal.style.display === "flex" && e.key === "Escape") {
+        closeModal();
       }
     });
+    
     // Click outside modal to close
-    helpModal.addEventListener("mousedown", function (e) {
+    helpModal.addEventListener("click", function (e) {
       if (e.target === helpModal) {
-        helpModal.classList.add("hidden");
-        helpBtn.focus();
+        closeModal();
       }
     });
   }
@@ -133,8 +148,7 @@ function initializeApp() {
     }
   }, 1000);
 
-  // Initialize theme
-  initializeTheme();
+  // Theme functionality removed for cleaner UI
 
   // Update preview initially
   updatePreview();
@@ -167,9 +181,7 @@ const elements = {
   imageWidthValue: document.getElementById("image-width-value"),
   radiusValue: document.getElementById("radius-value"),
 
-  // Theme elements
-  themeButtons: document.querySelectorAll(".theme-btn"),
-  themeToggle: document.getElementById("themeToggle"),
+  // Theme elements (removed theme toggle for cleaner UI)
 
   // Modal elements
   developerModal: document.getElementById("developerModal"),
@@ -272,28 +284,7 @@ const themes = {
   },
 };
 
-// Initialize theme system
-function initializeTheme() {
-  // Set up theme toggle
-  if (elements.themeToggle) {
-    elements.themeToggle.addEventListener("click", toggleSiteTheme);
-  }
-
-  // Set up theme buttons
-  elements.themeButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const theme = btn.dataset.theme;
-      applyCardTheme(theme);
-
-      // Update active state
-      elements.themeButtons.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-
-      // Save preference
-      localStorage.setItem("selectedCardTheme", theme);
-    });
-  });
-}
+// Theme system simplified - theme presets removed for cleaner UI
 
 // Apply card theme
 function applyCardTheme(themeKey) {

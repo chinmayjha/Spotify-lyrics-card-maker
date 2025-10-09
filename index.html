@@ -127,163 +127,200 @@
       .loading-screen {
         position: fixed;
         inset: 0;
-        background: var(--bg-dark);
+        background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
         display: flex;
         align-items: center;
         justify-content: center;
         z-index: 9999;
-        transition: opacity 0.5s ease;
+        transition: opacity 0.6s ease, backdrop-filter 0.6s ease;
       }
       .loading-spinner {
-        width: 40px;
-        height: 40px;
-        border: 3px solid var(--glass-border);
-        border-top: 3px solid var(--primary);
+        width: 48px;
+        height: 48px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top: 3px solid #1db954;
         border-radius: 50%;
-        animation: spin 1s linear infinite;
+        animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        box-shadow: 0 0 20px rgba(29, 185, 84, 0.3);
       }
       @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
       }
-      /* Minimal Tailwind-inspired modal and kbd for Help Modal */
-      .fixed {
+      .loading-screen.hidden {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+      }
+      /* Help Modal Styles */
+      .help-modal-overlay {
         position: fixed;
-      }
-      .inset-0 {
         top: 0;
-        right: 0;
-        bottom: 0;
         left: 0;
-      }
-      .z-50 {
-        z-index: 50;
-      }
-      .flex {
-        display: flex;
-      }
-      .items-center {
-        align-items: center;
-      }
-      .justify-center {
-        justify-content: center;
-      }
-      .bg-black {
-        background-color: #000;
-      }
-      .bg-opacity-60 {
-        background-color: rgba(0, 0, 0, 0.6);
-      }
-      .hidden {
-        display: none;
-      }
-      .bg-white {
-        background-color: #fff;
-      }
-      .rounded-xl {
-        border-radius: 0.75rem;
-      }
-      .shadow-2xl {
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      }
-      .max-w-lg {
-        max-width: 32rem;
-      }
-      .w-full {
         width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(8px);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
       }
-      .p-6 {
-        padding: 1.5rem;
+      .help-modal-overlay.show {
+        opacity: 1;
       }
-      .relative {
-        position: relative;
+      .help-modal-container {
+        width: 90%;
+        max-width: 500px;
+        max-height: 80vh;
+        overflow-y: auto;
+        transform: translateY(20px) scale(0.95);
+        transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
       }
-      .absolute {
-        position: absolute;
+      .help-modal-overlay.show .help-modal-container {
+        transform: translateY(0) scale(1);
       }
-      .top-4 {
-        top: 1rem;
+      .help-modal-content {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
+        backdrop-filter: blur(20px);
+        box-shadow: var(--shadow-2xl);
+        overflow: hidden;
       }
-      .right-4 {
-        right: 1rem;
+      .help-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--spacing-lg);
+        border-bottom: 1px solid var(--glass-border);
+        background: rgba(29, 185, 84, 0.05);
       }
-      .text-gray-400 {
-        color: #9ca3af;
+      .help-modal-title {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        color: var(--text-primary);
       }
-      .hover\:text-gray-700:hover {
-        color: #374151;
-      }
-      .transition {
-        transition: color 0.2s;
-      }
-      .mb-4 {
-        margin-bottom: 1rem;
-      }
-      .gap-2 {
-        gap: 0.5rem;
-      }
-      .text-green-500 {
-        color: #22c55e;
-      }
-      .text-xl {
+      .help-modal-title h3 {
+        margin: 0;
         font-size: 1.25rem;
-      }
-      .font-bold {
-        font-weight: 700;
-      }
-      .text-gray-800 {
-        color: #1f2937;
-      }
-      .space-y-4 > :not([hidden]) ~ :not([hidden]) {
-        margin-top: 1rem;
-      }
-      .font-semibold {
         font-weight: 600;
       }
-      .text-gray-700 {
-        color: #374151;
+      .help-icon {
+        color: var(--primary);
+        width: 24px;
+        height: 24px;
       }
-      .mb-1 {
-        margin-bottom: 0.25rem;
+      .help-close-btn {
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding: var(--spacing-xs);
+        border-radius: var(--radius-md);
+        transition: all 0.2s ease;
       }
-      .text-gray-600 {
-        color: #4b5563;
+      .help-close-btn:hover {
+        background: var(--glass-bg);
+        color: var(--text-primary);
       }
-      .text-sm {
-        font-size: 0.875rem;
+      .help-modal-body {
+        padding: var(--spacing-lg);
+        color: var(--text-primary);
       }
-      .grid {
-        display: grid;
+      .help-section {
+        margin-bottom: var(--spacing-lg);
       }
-      .grid-cols-1 {
-        grid-template-columns: repeat(1, minmax(0, 1fr));
+      .help-section:last-child {
+        margin-bottom: 0;
       }
-      .gap-2 {
-        gap: 0.5rem;
-      }
-      .flex {
+      .help-section-header {
         display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
       }
-      .kbd {
-        display: inline-block;
-        padding: 0.2em 0.5em;
-        font-size: 0.9em;
-        font-family: monospace;
-        background: #f3f4f6;
-        border-radius: 0.375rem;
-        border: 1px solid #d1d5db;
-        color: #374151;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+      .help-emoji {
+        font-size: 1.2rem;
       }
-      .list-disc {
-        list-style-type: disc;
+      .help-section-header h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
       }
-      .pl-5 {
-        padding-left: 1.25rem;
+      .help-section p {
+        margin: 0;
+        line-height: 1.6;
+        color: var(--text-secondary);
       }
-      .space-y-1 > :not([hidden]) ~ :not([hidden]) {
-        margin-top: 0.25rem;
+      .shortcuts-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+      .shortcut-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--spacing-sm);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--glass-border);
+      }
+      .shortcut-keys {
+        display: flex;
+        gap: 4px;
+      }
+      .shortcut-keys kbd {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-sm);
+        padding: 2px 6px;
+        font-size: 0.8rem;
+        font-family: var(--font-mono);
+        color: var(--text-primary);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+      .shortcut-item span {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+      .tips-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .tips-list li {
+        position: relative;
+        padding-left: var(--spacing-md);
+        margin-bottom: var(--spacing-sm);
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+      .tips-list li::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: var(--primary);
+        font-weight: bold;
+      }
+      @media (max-width: 600px) {
+        .help-modal-container {
+          width: 95%;
+          max-height: 85vh;
+        }
+        .help-modal-header,
+        .help-modal-body {
+          padding: var(--spacing-md);
+        }
+        .shortcut-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: var(--spacing-xs);
+        }
       }
     </style>
 
@@ -723,7 +760,7 @@
         <div class="developer-header">
           <div class="developer-photo">
             <img
-              src="https://chinmayjha.tech/assets/img/favicon.jpg"
+              src="assets/icons/logo.png"
               alt="Chinmay Jha"
               class="developer-image"
             />
@@ -795,84 +832,68 @@
       </div>
     </div>
 
-    <!-- Help Modal -->
-    <!-- Redesigned Help & Shortcuts Modal -->
-    <div
-      id="helpModal"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden"
-    >
-      <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 relative">
-        <button
-          id="closeHelpModal"
-          class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition"
-          aria-label="Close Help"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-        <div class="mb-4 flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-7 w-7 text-green-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M8 10h.01M12 14h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8s-9-3.582-9-8 4.03-8 9-8 9 3.582 9 8z"
-            />
-          </svg>
-          <h3 class="text-xl font-bold text-gray-800">Help & Shortcuts</h3>
-        </div>
-        <div class="space-y-4">
-          <div>
-            <h4 class="font-semibold text-gray-700 mb-1">🚀 Getting Started</h4>
-            <p class="text-gray-600 text-sm">
-              Fill in your song details and lyrics to create beautiful cards
-              instantly!
-            </p>
+    <!-- Help & Shortcuts Modal -->
+    <div id="helpModal" class="help-modal-overlay" style="display: none;">
+      <div class="help-modal-container">
+        <div class="help-modal-content">
+          <div class="help-modal-header">
+            <div class="help-modal-title">
+              <i data-lucide="help-circle" class="help-icon"></i>
+              <h3>Help & Shortcuts</h3>
+            </div>
+            <button id="closeHelpModal" class="help-close-btn" aria-label="Close Help">
+              <i data-lucide="x"></i>
+            </button>
           </div>
-          <div>
-            <h4 class="font-semibold text-gray-700 mb-1">
-              ⌨️ Keyboard Shortcuts
-            </h4>
-            <ul class="grid grid-cols-1 gap-2 text-sm">
-              <li class="flex items-center gap-2">
-                <kbd class="kbd">Ctrl</kbd> + <kbd class="kbd">D</kbd>
-                <span class="text-gray-500">Download card</span>
-              </li>
-              <li class="flex items-center gap-2">
-                <kbd class="kbd">Ctrl</kbd> + <kbd class="kbd">C</kbd>
-                <span class="text-gray-500">Copy to clipboard</span>
-              </li>
-              <li class="flex items-center gap-2">
-                <kbd class="kbd">Ctrl</kbd> + <kbd class="kbd">S</kbd>
-                <span class="text-gray-500">Share card</span>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 class="font-semibold text-gray-700 mb-1">💡 Tips</h4>
-            <ul class="list-disc pl-5 text-gray-600 text-sm space-y-1">
-              <li>Use high-quality album cover URLs for best results</li>
-              <li>Keep lyrics short for better readability</li>
-              <li>All processing happens locally - your data stays private</li>
-            </ul>
+          
+          <div class="help-modal-body">
+            <div class="help-section">
+              <div class="help-section-header">
+                <span class="help-emoji">🚀</span>
+                <h4>Getting Started</h4>
+              </div>
+              <p>Fill in your song details and lyrics to create beautiful cards instantly! No signup required - everything runs locally in your browser.</p>
+            </div>
+            
+            <div class="help-section">
+              <div class="help-section-header">
+                <span class="help-emoji">⌨️</span>
+                <h4>Keyboard Shortcuts</h4>
+              </div>
+              <div class="shortcuts-list">
+                <div class="shortcut-item">
+                  <div class="shortcut-keys">
+                    <kbd>Ctrl</kbd> + <kbd>D</kbd>
+                  </div>
+                  <span>Download card as PNG</span>
+                </div>
+                <div class="shortcut-item">
+                  <div class="shortcut-keys">
+                    <kbd>Ctrl</kbd> + <kbd>C</kbd>
+                  </div>
+                  <span>Copy card to clipboard</span>
+                </div>
+                <div class="shortcut-item">
+                  <div class="shortcut-keys">
+                    <kbd>Ctrl</kbd> + <kbd>S</kbd>
+                  </div>
+                  <span>Share card</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="help-section">
+              <div class="help-section-header">
+                <span class="help-emoji">💡</span>
+                <h4>Pro Tips</h4>
+              </div>
+              <ul class="tips-list">
+                <li>Use high-quality album cover URLs for crisp images</li>
+                <li>Keep lyrics concise for better readability</li>
+                <li>Experiment with different colors to match your vibe</li>
+                <li>All processing happens locally - your data stays private</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -881,7 +902,7 @@
     <!-- Footer start -->
     <footer class="foot">
       <p class="credit">
-        Made with ❤️ by
+        Made with <i data-lucide="heart" style="color: #ef4444; width: 16px; height: 16px; display: inline;"></i> by
         <a href="https://chinmayjha.tech" class="chinmay-link" rel="noopener"
           >Chinmay</a
         >

@@ -33,6 +33,21 @@
   .feature-card {
     padding: var(--spacing-lg);
   }
+  .export-actions {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+  .export-secondary {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+  .btn-export {
+    flex: 1;
+    min-width: 0;
+  }
+  .preview-panel {
+    margin-top: var(--spacing-lg);
+  }
 }
 .features-grid {
   gap: var(--spacing-lg);
@@ -73,6 +88,26 @@
     opacity: 1;
     transform: none;
   }
+}
+
+/* Enhanced card hover effects */
+.glass-card {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.feature-card {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+.feature-card:hover .feature-icon {
+  transform: scale(1.1) rotate(5deg);
 }
 /* ===== ENHANCED MODAL & POPUP ANIMATIONS ===== */
 .developer-modal,
@@ -364,6 +399,10 @@
   /* Typography */
   --font-primary: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: "Space Grotesk", var(--font-primary);
+  --font-mono: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+
+  /* Additional Shadows */
+  --shadow-2xl: 0 32px 80px rgba(0, 0, 0, 0.4);
 }
 
 /* Light theme variables */
